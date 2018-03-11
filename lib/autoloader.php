@@ -16,6 +16,8 @@
      * @license     https://nxfifteen.me.uk/api/license/mit/2015-2017 MIT
      */
 
+    session_start();
+
     require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . "functions.php" );
 
     spl_autoload_register(function ( $className ) {
@@ -26,9 +28,6 @@
         if ( file_exists($class) ) {
             /** @noinspection PhpIncludeInspection */
             require_once( $class );
-        } else {
-            echo $class;
-            die();
         }
 
     });

@@ -16,10 +16,44 @@
      * @license     https://nxfifteen.me.uk/api/license/mit/2015-2017 MIT
      */
 
-    require_once ("lib/autoloader.php");
+    require_once (dirname(__FILE__) . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "autoloader.php");
     if (!isloggedIn()) {
-        header("Location: ./login.html");
+        header("Location: ./login.php");
     }
+
+    $resourceOwner = json_decode($_SESSION['resourceOwner'], true);
+
+    if ( array_key_exists("REDIRECT_URL", $_SERVER) ) {
+        $inputURL = $_SERVER[ 'REDIRECT_URL' ];
+    } else {
+        $inputURL = "";
+    }
+    $sysPath = str_ireplace($_SESSION[ 'core_config' ][ 'url' ], "", $_SESSION[ 'core_config' ][ 'http/' ]);
+
+    if ( $sysPath != "/" ) {
+        $inputURL = str_replace($sysPath, "", $inputURL);
+    }
+    if ( substr($inputURL, 0, 1) == "/" ) {
+        $inputURL = substr($inputURL, 1);
+    }
+
+//    $inputURL = explode("/", $inputURL);
+//    $url_namespace = $inputURL[ 0 ];
+    $url_namespace = $inputURL;
+    if ( $url_namespace == "" || $url_namespace == "dashboard" ) {
+        $url_namespace = "main";
+    }
+    nxr(0, "Namespace Called: " . $url_namespace);
+
+    $pageContent = dirname(__FILE__) . DIRECTORY_SEPARATOR . "views" . DIRECTORY_SEPARATOR . "content" . DIRECTORY_SEPARATOR . $url_namespace . ".php";
+    if ( $pageContent != "" ) {
+        nxr(0, "Content Loaded: " . $pageContent);
+    }
+
+    if (!file_exists($pageContent)) {
+        header("Location: /views/pages/404.html");
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,16 +66,16 @@
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
     <meta name="author" content="Łukasz Holeczek">
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
-    <link rel="shortcut icon" href="img/favicon-32x32.png">
+    <link rel="shortcut icon" href="/img/favicon-32x32.png">
 
     <title>CoreUI - Open Source Bootstrap Admin Template</title>
 
     <!-- Icons -->
-    <link href="css/font-awesome.min.css" rel="stylesheet">
-    <link href="css/simple-line-icons.css" rel="stylesheet">
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/simple-line-icons.css" rel="stylesheet">
 
     <!-- Main styles for this application -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
 
 </head>
 
@@ -49,33 +83,43 @@
 <header class="app-header navbar">
     <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">&#9776;</button>
     <a class="navbar-brand" href="#"></a>
+
+    <ul class="nav navbar-nav d-md-down-none">
+        <li class="nav-item">
+            <a class="nav-link navbar-toggler sidebar-toggler" href="#">&#9776;</a>
+        </li>
+
+        <?php require_once( 'views/comps/html.topMenu.php' ); ?>
+    </ul>
+
+    <?php require_once( 'views/comps/html.topUserMenu.php' ); ?>
 </header>
 
 <div class="app-body">
     <div class="sidebar">
         <nav class="sidebar-nav">
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="main.html"><i class="icon-speedometer"></i> Dashboard</a>
-                </li>
-            </ul>
+            <?php require_once( 'views/comps/html.navBar.php' ); ?>
         </nav>
     </div>
 
     <!-- Main content -->
     <main class="main">
-
-        <!-- Breadcrumb -->
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">Home</li>
-        </ol>
-
+        <?php require_once( 'views/comps/html.breadcrumb.php' ); ?>
 
         <div class="container-fluid">
-            <div id="ui-view"></div>
+            <div id="ui-view">
+                <?php
+                    /** @noinspection PhpIncludeInspection */
+                    require_once($pageContent);
+                ?>
+            </div>
         </div>
         <!-- /.conainer-fluid -->
     </main>
+
+    <aside class="aside-menu">
+        <?php require_once( 'views/comps/html.asideMenu.php' ); ?>
+    </aside>
 
 </div>
 
@@ -85,19 +129,19 @@
 </footer>
 
 <!-- Bootstrap and necessary plugins -->
-<script src="node_modules/jquery/dist/jquery.min.js"></script>
-<script src="node_modules/tether/dist/js/tether.min.js"></script>
-<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="node_modules/pace-js/pace.min.js"></script>
+<script src="/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="/node_modules/tether/dist/js/tether.min.js"></script>
+<script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/node_modules/pace-js/pace.min.js"></script>
 
 
 <!-- Plugins and scripts required by all views -->
-<script src="node_modules/chart.js/dist/Chart.min.js"></script>
+<script src="/node_modules/chart.js/dist/Chart.min.js"></script>
 
 
 <!-- GenesisUI main scripts -->
 
-<script src="js/app.js"></script>
+<script src="/js/app.js"></script>
 
 </body>
 

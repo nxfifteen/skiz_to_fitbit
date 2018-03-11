@@ -16,7 +16,7 @@
      * @license     https://nxfifteen.me.uk/api/license/mit/2015-2017 MIT
      */
 
-    use SkizImport\Config;
+    namespace SkizImport;
 
     require_once( dirname(__FILE__) . "/../autoloader.php" );
 

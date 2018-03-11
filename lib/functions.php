@@ -44,8 +44,8 @@
                 $msg = $msg . "\n";
             }
 
-            if ( is_writable(dirname(__FILE__) . "/../fitbit.log") ) {
-                $logFileName = fopen(dirname(__FILE__) . "/../fitbit.log", "a");
+            if ( is_writable(dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "logs.log") ) {
+                $logFileName = fopen(dirname(__FILE__) . "/../logs.log", "a");
                 fwrite($logFileName, $msg);
                 fclose($logFileName);
             }
@@ -81,12 +81,16 @@
         }
     }
 
+    /**
+     * @return bool
+     */
     function isloggedIn() {
-        $SkizImport = new SkizImport();
+        $appClass = new SkizImport\SkizImport();
 
-        if (!filter_input(INPUT_COOKIE, '_nx_fb_usr', FILTER_SANITIZE_STRING) ||
-            !filter_input(INPUT_COOKIE, '_nx_fb_key', FILTER_SANITIZE_STRING) ||
-            filter_input(INPUT_COOKIE, '_nx_fb_key', FILTER_SANITIZE_STRING) != gen_cookie_hash( $SkizImport->getSetting("salt"), filter_input(INPUT_COOKIE, '_nx_fb_usr', FILTER_SANITIZE_STRING) ) ) {
+        if (!filter_input(INPUT_COOKIE, '_nx_skiz', FILTER_SANITIZE_STRING) ||
+            !filter_input(INPUT_COOKIE, '_nx_skiz_usr', FILTER_SANITIZE_STRING) ||
+            filter_input(INPUT_COOKIE, '_nx_skiz', FILTER_SANITIZE_STRING) !=
+            gen_cookie_hash( $appClass->getSetting("salt"), filter_input(INPUT_COOKIE, '_nx_skiz_usr', FILTER_SANITIZE_STRING) ) ) {
             return FALSE;
         } else {
             return TRUE;
