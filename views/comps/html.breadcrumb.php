@@ -1,6 +1,9 @@
 <!-- Breadcrumb -->
-<ol class="breadcrumb">
-    <li class="breadcrumb-item">Home</li>
-    <li class="breadcrumb-item"><?php echo $url_namespace; ?></li>
+<?php
+    $breadcrums = explode("/", $url_namespace);
 
-</ol>
+    echo '<ol class="breadcrumb">';
+    foreach ( $breadcrums as $breadcrum ) {
+        echo '<li class="breadcrumb-item">'.$breadcrum.'</li>';
+    }
+    echo '</ol>';
