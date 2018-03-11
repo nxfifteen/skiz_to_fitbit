@@ -1,0 +1,19 @@
+{
+    "name": "nxfifteen/skizrocks",
+    "description": "Description",
+    "type": "project",
+    "require": {
+        "djchen/oauth2-fitbit": "^1.0",
+        "splitbrain/php-archive": "^1.0"
+    },
+    "config": {
+        "vendor-dir": "vendor"
+    },
+    "license": "GPL v3",
+    "authors": [
+        {
+            "name": "Stuart McCulloch Anderson",
+            "email": "stuart@nxfifteen.me.uk"
+        }
+    ]
+}
