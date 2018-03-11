@@ -23,32 +23,20 @@
 
     $resourceOwner = json_decode($_SESSION['resourceOwner'], true);
 
-    if ( array_key_exists("REDIRECT_URL", $_SERVER) ) {
-        $inputURL = $_SERVER[ 'REDIRECT_URL' ];
-    } else {
-        $inputURL = "";
-    }
-    $sysPath = str_ireplace($_SESSION[ 'core_config' ][ 'url' ], "", $_SESSION[ 'core_config' ][ 'http/' ]);
+    $url_namespace = getNameSpace();
 
-    if ( $sysPath != "/" ) {
-        $inputURL = str_replace($sysPath, "", $inputURL);
-    }
-    if ( substr($inputURL, 0, 1) == "/" ) {
-        $inputURL = substr($inputURL, 1);
-    }
+//    nxr(0, "Namespace Called: " . $url_namespace);
 
-//    $inputURL = explode("/", $inputURL);
-//    $url_namespace = $inputURL[ 0 ];
-    $url_namespace = $inputURL;
-    if ( $url_namespace == "" || $url_namespace == "dashboard" ) {
-        $url_namespace = "main";
+    switch ($url_namespace) {
+        case "upload/send":
+            require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "forms" . DIRECTORY_SEPARATOR . "receive.php" );
+            break;
     }
-    nxr(0, "Namespace Called: " . $url_namespace);
 
     $pageContent = dirname(__FILE__) . DIRECTORY_SEPARATOR . "views" . DIRECTORY_SEPARATOR . "content" . DIRECTORY_SEPARATOR . $url_namespace . ".php";
-    if ( $pageContent != "" ) {
-        nxr(0, "Content Loaded: " . $pageContent);
-    }
+//    if ( $pageContent != "" ) {
+//        nxr(0, "Content Loaded: " . $pageContent);
+//    }
 
     if (!file_exists($pageContent)) {
         header("Location: /views/pages/404.html");
@@ -76,6 +64,7 @@
 
     <!-- Main styles for this application -->
     <link href="/css/style.css" rel="stylesheet">
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
 
 </head>
 
@@ -107,7 +96,7 @@
         <?php require_once( 'views/comps/html.breadcrumb.php' ); ?>
 
         <div class="container-fluid">
-            <div id="ui-view">
+            <div id="animated fadeIn">
                 <?php
                     /** @noinspection PhpIncludeInspection */
                     require_once($pageContent);
@@ -129,7 +118,6 @@
 </footer>
 
 <!-- Bootstrap and necessary plugins -->
-<script src="/node_modules/jquery/dist/jquery.min.js"></script>
 <script src="/node_modules/tether/dist/js/tether.min.js"></script>
 <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="/node_modules/pace-js/pace.min.js"></script>

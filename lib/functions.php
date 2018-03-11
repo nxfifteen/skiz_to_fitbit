@@ -81,6 +81,29 @@
         }
     }
 
+    function getNameSpace() {
+        if ( array_key_exists("REDIRECT_URL", $_SERVER) ) {
+            $inputURL = $_SERVER[ 'REDIRECT_URL' ];
+        } else {
+            $inputURL = "";
+        }
+        $sysPath = str_ireplace($_SESSION[ 'core_config' ][ 'url' ], "", $_SESSION[ 'core_config' ][ 'http/' ]);
+
+        if ( $sysPath != "/" ) {
+            $inputURL = str_replace($sysPath, "", $inputURL);
+        }
+        if ( substr($inputURL, 0, 1) == "/" ) {
+            $inputURL = substr($inputURL, 1);
+        }
+
+        $url_namespace = $inputURL;
+        if ( $url_namespace == "" || $url_namespace == "dashboard" ) {
+            $url_namespace = "main";
+        }
+
+        return $url_namespace;
+    }
+
     /**
      * @return bool
      */

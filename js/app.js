@@ -64,6 +64,8 @@ function loadCSS(cssFile, end, callback) {
 
     var cssArray = {};
 
+    console.log(cssFile);
+
     if (!cssArray[cssFile]) {
         cssArray[cssFile] = true;
 
