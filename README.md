@@ -5,9 +5,9 @@ NxFitness SKIZ - A PHP Fitbit API Project
 
 [![build status](https://nxfifteen.me.uk/gitlab/rocks/skiz/badges/master/build.svg)](https://nxfifteen.me.uk/gitlab/rocks/skiz/commits/master)
 [![coverage report](https://nxfifteen.me.uk/gitlab/rocks/skiz/badges/master/coverage.svg)](https://nxfifteen.me.uk/gitlab/rocks/skiz/commits/master)
-[![Open Issues](https://nxfifteen.me.uk/api/shields/gitlab/149/issue/open)](https://nxfifteen.me.uk/gitlab/rocks/skiz/issues)
-[![Closed Issues](https://nxfifteen.me.uk/api/shields/gitlab/149/issue/closed)](https://nxfifteen.me.uk/gitlab/rocks/skiz/issues?scope=all&state=closed)
-[![Authors](https://nxfifteen.me.uk/api/shields/gitlab/149/authors)](https://nxfifteen.me.uk/gitlab/rocks/skiz/graphs/master)
+[![Open Issues](https://nxfifteen.me.uk/api/shields/gitlab/239/issue/open)](https://nxfifteen.me.uk/gitlab/rocks/skiz/issues)
+[![Closed Issues](https://nxfifteen.me.uk/api/shields/gitlab/239/issue/closed)](https://nxfifteen.me.uk/gitlab/rocks/skiz/issues?scope=all&state=closed)
+[![Authors](https://nxfifteen.me.uk/api/shields/gitlab/239/authors)](https://nxfifteen.me.uk/gitlab/rocks/skiz/graphs/master)
 [![MIT License](https://nxfifteen.me.uk/api/shields/license/GPL-v3)](https://nxfifteen.me.uk/gitlab/rocks/skiz/blob/master/LICENSE)
 
 I've been using my Fitbit every day without break since I first got it in June 2012 and while the Fitbit dashboard is good, offering everything you could ever want, I felt the need to roll my own - as always. 
