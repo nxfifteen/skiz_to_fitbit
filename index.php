@@ -1,3 +1,26 @@
+<?php
+    /**
+     * This file is part of NxFIFTEEN Fitness SkizImport.
+     * Copyright (c) 2018. Stuart McCulloch Anderson
+     * For the full copyright and license information, please view the LICENSE
+     * file that was distributed with this source code.
+     *
+     * @package     SkizImport
+     * @version     0.0.1.x
+     * @since       0.0.0.1
+     * @author      Stuart McCulloch Anderson <stuart@nxfifteen.me.uk>
+     * @link        https://nxfifteen.me.uk NxFIFTEEN
+     * @link        https://nxfifteen.me.uk/nxcore Project Page
+     * @link        https://nxfifteen.me.uk/gitlab/rocks/core Git Repo
+     * @copyright   2018 Stuart McCulloch Anderson
+     * @license     https://nxfifteen.me.uk/api/license/mit/2015-2017 MIT
+     */
+
+    require_once ("lib/autoloader.php");
+    if (!isloggedIn()) {
+        header("Location: ./login.html");
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,7 +32,7 @@
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
     <meta name="author" content="Łukasz Holeczek">
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
-    <link rel="shortcut icon" href="img/favicon.png">
+    <link rel="shortcut icon" href="img/favicon-32x32.png">
 
     <title>CoreUI - Open Source Bootstrap Admin Template</title>
 
