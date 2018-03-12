@@ -1,8 +1,8 @@
 <?php
 
-    require_once( dirname(__FILE__) . "/lib/autoloader.php" );
+    require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "autoloader.php" );
 
-    $cacheDir = dirname(__FILE__) . '/cache';
+    $cacheDir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'cache';
     if ( file_exists($cacheDir) AND is_writable($cacheDir) ) {
 
         nxr(0, "Cleaning up downloads");
@@ -17,13 +17,13 @@
         $files = scandir($dir);
         foreach ($files as $file) {
             if ($file != "." && $file != "..") {
-                if (is_file($dir . "/" . $file)) {
-                    if ($now - filemtime($dir . "/" . $file) >= 60 * 20) { // 2 days
-                        nxr(2, "Deleting " . $dir . "/" . $file);
-                        unlink($dir . "/" . $file);
+                if (is_file($dir . DIRECTORY_SEPARATOR . $file)) {
+                    if ($now - filemtime($dir . DIRECTORY_SEPARATOR . $file) >= 60 * 20) { // 2 days
+                        nxr(2, "Deleting " . $dir . DIRECTORY_SEPARATOR . $file);
+                        unlink($dir . DIRECTORY_SEPARATOR . $file);
                     }
-                } else if (is_dir($dir . "/" . $file)) {
-                    cleanUpDownlods($dir . "/" . $file, $now);
+                } else if (is_dir($dir . DIRECTORY_SEPARATOR . $file)) {
+                    cleanUpDownlods($dir . DIRECTORY_SEPARATOR . $file, $now);
                 }
             }
         }

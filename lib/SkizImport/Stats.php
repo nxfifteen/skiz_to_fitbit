@@ -10,7 +10,7 @@
 
     use Medoo\Medoo;
 
-    require_once( dirname(__FILE__) . "/../autoloader.php" );
+    require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "autoloader.php" );
 
     class Stats
     {

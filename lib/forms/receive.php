@@ -1,12 +1,12 @@
 <?php
     set_time_limit(600);
 
-    require_once( dirname(__FILE__) . "/../autoloader.php" );
+    require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "autoloader.php" );
 
-    $cacheDir = dirname(__FILE__) . '/../../cache';
+    $cacheDir = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'cache';
 
-    if ( 0 < $_FILES['skizfile']['error'] ) {
-        nxr(1, 'Error: ' . $_FILES['skizfile']['error']);
+    if ( 0 < $_FILES[ 'skizfile' ][ 'error' ] ) {
+        nxr(1, 'Error: ' . $_FILES[ 'skizfile' ][ 'error' ]);
         echo "There was a problem with your upload";
     } else {
         if ( file_exists($cacheDir) AND is_writable($cacheDir) ) {
@@ -20,7 +20,7 @@
             nxr(1, "Pre-processing extracted files");
             $receiver->readExtracted();
 
-            $_SESSION['SkizImport\Upload\Receive'] = serialize($receiver);
+            $_SESSION[ 'SkizImport\Upload\Receive' ] = serialize($receiver);
         }
     }
 
@@ -30,12 +30,13 @@
     /**
      * @param $dir
      */
-    function rrmdir( $dir) {
-        if (is_dir($dir)) {
+    function rrmdir( $dir )
+    {
+        if ( is_dir($dir) ) {
             $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object);
+            foreach ( $objects as $object ) {
+                if ( $object != "." && $object != ".." ) {
+                    if ( filetype($dir . DIRECTORY_SEPARATOR . $object) == "dir" ) rrmdir($dir . DIRECTORY_SEPARATOR . $object); else unlink($dir . DIRECTORY_SEPARATOR . $object);
                 }
             }
             reset($objects);

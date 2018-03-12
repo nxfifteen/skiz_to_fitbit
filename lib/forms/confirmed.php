@@ -1,7 +1,7 @@
 <?php
     set_time_limit(600);
 
-    require_once( dirname(__FILE__) . "/../autoloader.php" );
+    require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "autoloader.php" );
 
     $appClass = new SkizImport\SkizImport();
 

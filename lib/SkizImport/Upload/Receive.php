@@ -12,7 +12,7 @@
     use splitbrain\PHPArchive\ArchiveIOException;
     use splitbrain\PHPArchive\Zip;
 
-    require_once( dirname(__FILE__) . "/../../autoloader.php" );
+    require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "autoloader.php" );
 
     define("TRACK_SEGMENT_UNKNOWN", 0);
     define("TRACK_SEGMENT_ASCENT", 1);           // used for cycling and nordic", 0); mountaineering -> WinterSportAscending
@@ -84,7 +84,7 @@
         {
             $this->setCacheDir($cacheDir);
             $this->setResourceOwner(json_decode($_SESSION[ 'resourceOwner' ], TRUE));
-            $this->setUploadPath($cacheDir . "/uploads/" . $this->getResourceOwner('encodedId'));
+            $this->setUploadPath($cacheDir . DIRECTORY_SEPARATOR . "uploads" . DIRECTORY_SEPARATOR . $this->getResourceOwner('encodedId'));
             $this->setStatsClass(new Stats());
         }
 
@@ -151,15 +151,24 @@
             }
 
             foreach ( $uploads as $uploadedFile ) {
-                if ( file_exists($this->getUploadPath() . '/' . $uploadedFile[ 'name' ]) ) {
-                    unlink($this->getUploadPath() . '/' . $uploadedFile[ 'name' ]);
+                if ( file_exists($this->getUploadPath() . DIRECTORY_SEPARATOR . $uploadedFile[ 'name' ]) ) {
+                    unlink($this->getUploadPath() . DIRECTORY_SEPARATOR . $uploadedFile[ 'name' ]);
                 }
 
-                move_uploaded_file($uploadedFile[ 'tmp_name' ], $this->getUploadPath() . '/' . $uploadedFile[ 'name' ]);
+                if ( mime_content_type ( $uploadedFile[ 'tmp_name' ] ) != "application/zip" ) {
+                    nxr(0, "[ERROR] Unknown MIME type uploaded:");
+                    nxr(1, mime_content_type ( $uploadedFile[ 'tmp_name' ] ));
+                    nxr(1, "Uploaded by " . $this->getResourceOwner('fullName') . " (" . $this->getResourceOwner('encodedId') . ")");
 
-                $this->getStatsClass()->recordNewUpload(filesize($this->getUploadPath() . '/' . $uploadedFile[ 'name' ]));
+                    die("Something is wrong with you upload. We only accept SKIZ files from SkiTracks");
+                }
 
-                $this->setUploadedSkizFile($this->getUploadPath() . '/' . $uploadedFile[ 'name' ]);
+
+                move_uploaded_file($uploadedFile[ 'tmp_name' ], $this->getUploadPath() . DIRECTORY_SEPARATOR . $uploadedFile[ 'name' ]);
+
+                $this->getStatsClass()->recordNewUpload(filesize($this->getUploadPath() . DIRECTORY_SEPARATOR . $uploadedFile[ 'name' ]));
+
+                $this->setUploadedSkizFile($this->getUploadPath() . DIRECTORY_SEPARATOR . $uploadedFile[ 'name' ]);
             }
 
             //nxr(0, "Store file as " . $this->getUploadedSkizFile());
@@ -196,7 +205,7 @@
         {
             $tar = new Zip();
             try {
-                $path = $this->getUploadPath() . "/" . str_ireplace(".skiz", "", basename($this->getUploadedSkizFile()));
+                $path = $this->getUploadPath() . DIRECTORY_SEPARATOR . str_ireplace(".skiz", "", basename($this->getUploadedSkizFile()));
                 if ( !file_exists($path) ) {
                     mkdir($path, 0755, TRUE);
                 }
@@ -223,7 +232,7 @@
         public function readExtracted()
         {
             if ( $this->checkExtracted() ) {
-                $trackFile = simplexml_load_file($this->getExtractedPath() . "/Track.xml");
+                $trackFile = simplexml_load_file($this->getExtractedPath() . DIRECTORY_SEPARATOR . "Track.xml");
                 $this->fileContentsTracks = json_encode($trackFile);
                 $this->timezoneOffset = (String)$trackFile[ 'tz' ];
                 $plusMinus = substr((String)$trackFile[ 'tz' ], 0, 1);
@@ -244,7 +253,7 @@
 
                 $loops = 0;
                 $this->skiRuns = [];
-                $fh = fopen($this->getExtractedPath() . "/Segment.csv", 'r');
+                $fh = fopen($this->getExtractedPath() . DIRECTORY_SEPARATOR . "Segment.csv", 'r');
                 while ( ( $data = fgetcsv($fh, 100, ",") ) !== FALSE ) {
                     $loops = $loops + 1;
                     if ( count($data) >= 5 && $data[ 2 ] <> TRACK_SEGMENT_SKI_LIFT ) {
@@ -272,20 +281,11 @@
 
         public function checkExtracted()
         {
-            if ( !file_exists($this->getExtractedPath() . "/Nodes.csv") ) {
-                //nxr(2, "No Nodes found uploaded");
-                //nxr(3, $this->getExtractedPath() . "/Nodes.csv");
-
+            if ( !file_exists($this->getExtractedPath() . DIRECTORY_SEPARATOR . "Nodes.csv") ) {
                 return FALSE;
-            } else if ( !file_exists($this->getExtractedPath() . "/Segment.csv") ) {
-                //nxr(2, "No Segment found uploaded");
-                //nxr(3, $this->getExtractedPath() . "/Segment.csv");
-
+            } else if ( !file_exists($this->getExtractedPath() . DIRECTORY_SEPARATOR . "Segment.csv") ) {
                 return FALSE;
-            } else if ( !file_exists($this->getExtractedPath() . "/Track.xml") ) {
-                //nxr(2, "No Track found uploaded");
-                //nxr(3, $this->getExtractedPath() . "/Track.xml");
-
+            } else if ( !file_exists($this->getExtractedPath() . DIRECTORY_SEPARATOR . "Track.xml") ) {
                 return FALSE;
             } else {
                 return TRUE;
@@ -356,7 +356,7 @@
                 $apiReturnHeartRate = json_decode($apiReturnHeartRate, TRUE);
             }
 
-            $tempDir = $this->getCacheDir() . "/temp/" . $this->getResourceOwner('encodedId');
+            $tempDir = $this->getCacheDir() . DIRECTORY_SEPARATOR . "temp" . DIRECTORY_SEPARATOR . $this->getResourceOwner('encodedId');
             if ( !file_exists($tempDir) ) {
                 mkdir($tempDir, 0755, TRUE);
             }
@@ -387,10 +387,10 @@
             $tcxContents .= "                </Track>\n";
             $tcxContents .= $this->templateTCXFooter();
 
-            if (file_exists($tempDir . "/" . $skiRun['NAME'] . ".tcx")) {
-                unlink($tempDir . "/" . $skiRun['NAME'] . ".tcx");
+            if (file_exists($tempDir . DIRECTORY_SEPARATOR . $skiRun['NAME'] . ".tcx")) {
+                unlink($tempDir . DIRECTORY_SEPARATOR . $skiRun['NAME'] . ".tcx");
             }
-            file_put_contents($tempDir . "/" . $skiRun['NAME'] . ".tcx", $tcxContents);
+            file_put_contents($tempDir . DIRECTORY_SEPARATOR . $skiRun['NAME'] . ".tcx", $tcxContents);
 
         }
 
@@ -515,8 +515,8 @@
             $prevLat = 0;
             $prevLon = 0;
             $gpsPoints = [];
-            $fh = fopen($this->getExtractedPath() . "/Nodes.csv", 'r');
-            nxr(5, ".", TRUE, FALSE);
+            $fh = fopen($this->getExtractedPath() . DIRECTORY_SEPARATOR . "Nodes.csv", 'r');
+            //nxr(5, ".", TRUE, FALSE);
             while ( !feof($fh) ) {
                 $data = fgetcsv($fh, 200, ",");
                 $loops = $loops + 1;
@@ -543,13 +543,13 @@
                     $prevLat = $data[ 1 ];
                     $prevLon = $data[ 2 ];
 
-                    nxr(0, ".", FALSE, FALSE);
+                    //nxr(0, ".", FALSE, FALSE);
                 }
 
                 if ( $data[ 0 ] > $skiRun[ 'END_TS' ] || $loops > 30000 ) break;
             }
             fclose($fh);
-            nxr(1, "[DONE]", FALSE);
+            //nxr(1, "[DONE]", FALSE);
 
             return [ $gpsPoints, $totalDistance ];
         }
@@ -615,13 +615,13 @@
 
         public function createZipDownload()
         {
-            $tempDir = $this->getCacheDir() . "/temp/" . $this->getResourceOwner('encodedId');
-            $downloadDir = $this->getCacheDir() . "/downloads/" . $this->getResourceOwner('encodedId');
+            $tempDir = $this->getCacheDir() . DIRECTORY_SEPARATOR . "temp" . DIRECTORY_SEPARATOR . $this->getResourceOwner('encodedId');
+            $downloadDir = $this->getCacheDir() . DIRECTORY_SEPARATOR . "downloads" . DIRECTORY_SEPARATOR . $this->getResourceOwner('encodedId');
             if ( !file_exists($downloadDir) ) {
                 mkdir($downloadDir, 0755, TRUE);
             }
             $tracksFile = $this->getFileContentsTracks();
-            $downloadFile = $downloadDir . "/" . str_ireplace("/","-",$tracksFile['@attributes']['name']) . ".zip";
+            $downloadFile = $downloadDir . DIRECTORY_SEPARATOR . str_ireplace("/","-",$tracksFile['@attributes']['name']) . ".zip";
 
             $tar = new Zip();
             try {
@@ -630,8 +630,8 @@
                     $objects = scandir($tempDir);
                     foreach ($objects as $object) {
                         if ($object != "." && $object != "..") {
-                            if (filetype($tempDir."/".$object) == "file")
-                                $tar->addFile($tempDir."/".$object, $object);
+                            if (filetype($tempDir . DIRECTORY_SEPARATOR . $object) == "file")
+                                $tar->addFile($tempDir . DIRECTORY_SEPARATOR . $object, $object);
                         }
                     }
                     reset($objects);
@@ -647,13 +647,13 @@
 
         public function cleanUp()
         {
-            $tempDir = $this->getCacheDir() . "/temp/" . $this->getResourceOwner('encodedId');
+            $tempDir = $this->getCacheDir() . DIRECTORY_SEPARATOR . "temp" . DIRECTORY_SEPARATOR . $this->getResourceOwner('encodedId');
             $this->rrmdir($tempDir);
-            $uploadDir = $this->getCacheDir() . "/uploads/" . $this->getResourceOwner('encodedId');
+            $uploadDir = $this->getCacheDir() . DIRECTORY_SEPARATOR . "uploads" . DIRECTORY_SEPARATOR . $this->getResourceOwner('encodedId');
             $this->rrmdir($uploadDir);
 
             $now   = time();
-            $this->cleanUpDownlods($this->getCacheDir() . "/downloads", $now);
+            $this->cleanUpDownlods($this->getCacheDir() . DIRECTORY_SEPARATOR . "downloads", $now);
         }
 
         private function cleanUpDownlods($dir, $now)
@@ -661,12 +661,12 @@
             $files = scandir($dir);
             foreach ($files as $file) {
                 if ($file != "." && $file != "..") {
-                    if (is_file($dir . "/" . $file)) {
-                        if ($now - filemtime($dir . "/" . $file) >= 60 * 20) { // 2 days
-                            unlink($dir . "/" . $file);
+                    if (is_file($dir . DIRECTORY_SEPARATOR . $file)) {
+                        if ($now - filemtime($dir . DIRECTORY_SEPARATOR . $file) >= 60 * 20) { // 2 days
+                            unlink($dir . DIRECTORY_SEPARATOR . $file);
                         }
-                    } else if (is_dir($dir . "/" . $file)) {
-                        $this->cleanUpDownlods($dir . "/" . $file, $now);
+                    } else if (is_dir($dir . DIRECTORY_SEPARATOR . $file)) {
+                        $this->cleanUpDownlods($dir . DIRECTORY_SEPARATOR . $file, $now);
                     }
                 }
             }
@@ -680,7 +680,7 @@
                 $objects = scandir($dir);
                 foreach ($objects as $object) {
                     if ($object != "." && $object != "..") {
-                        if (filetype($dir."/".$object) == "dir") $this->rrmdir($dir."/".$object); else unlink($dir."/".$object);
+                        if (filetype($dir . DIRECTORY_SEPARATOR . $object) == "dir") $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object); else unlink($dir . DIRECTORY_SEPARATOR . $object);
                     }
                 }
                 reset($objects);

@@ -37,10 +37,6 @@
     }
 
     $pageContent = dirname(__FILE__) . DIRECTORY_SEPARATOR . "views" . DIRECTORY_SEPARATOR . "content" . DIRECTORY_SEPARATOR . $url_namespace . ".php";
-//    if ( $pageContent != "" ) {
-//        nxr(0, "Content Loaded: " . $pageContent);
-//    }
-
     if (!file_exists($pageContent)) {
         header("Location: /views/pages/404.html");
     }
@@ -81,22 +77,22 @@
             <a class="nav-link navbar-toggler sidebar-toggler" href="#">&#9776;</a>
         </li>
 
-        <?php require_once( 'views/comps/html.topMenu.php' ); ?>
+        <?php require_once( 'views' . DIRECTORY_SEPARATOR . 'comps' . DIRECTORY_SEPARATOR . 'html.topMenu.php' ); ?>
     </ul>
 
-    <?php require_once( 'views/comps/html.topUserMenu.php' ); ?>
+    <?php require_once( 'views' . DIRECTORY_SEPARATOR . 'comps' . DIRECTORY_SEPARATOR . 'html.topUserMenu.php' ); ?>
 </header>
 
 <div class="app-body">
     <div class="sidebar">
         <nav class="sidebar-nav">
-            <?php require_once( 'views/comps/html.navBar.php' ); ?>
+            <?php require_once( 'views' . DIRECTORY_SEPARATOR . 'comps' . DIRECTORY_SEPARATOR . 'html.navBar.php' ); ?>
         </nav>
     </div>
 
     <!-- Main content -->
     <main class="main">
-        <?php require_once( 'views/comps/html.breadcrumb.php' ); ?>
+        <?php require_once( 'views' . DIRECTORY_SEPARATOR . 'comps' . DIRECTORY_SEPARATOR . 'html.breadcrumb.php' ); ?>
 
         <div class="container-fluid">
             <div id="animated fadeIn">
@@ -110,7 +106,7 @@
     </main>
 
     <aside class="aside-menu">
-        <?php require_once( 'views/comps/html.asideMenu.php' ); ?>
+        <?php require_once( 'views' . DIRECTORY_SEPARATOR . 'comps' . DIRECTORY_SEPARATOR . 'html.asideMenu.php' ); ?>
     </aside>
 
 </div>

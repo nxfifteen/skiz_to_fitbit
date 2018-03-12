@@ -1,4 +1,4 @@
-<?php require_once( dirname(__FILE__) . "/lib/autoloader.php" ); ?>
+<?php require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "autoloader.php" ); ?>
 <!DOCTYPE html>
 <html lang="en">
 

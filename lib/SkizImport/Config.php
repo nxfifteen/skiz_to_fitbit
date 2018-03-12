@@ -18,7 +18,7 @@
 
     namespace SkizImport;
 
-    require_once( dirname(__FILE__) . "/../autoloader.php" );
+    require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "autoloader.php" );
 
     class Config
     {
@@ -41,7 +41,7 @@
             if ( isset($_SESSION) && is_array($_SESSION) && array_key_exists("core_config", $_SESSION) && count($_SESSION[ 'core_config' ]) > 0 ) {
                 $this->settings = $_SESSION[ 'core_config' ];
             } else {
-                require_once( dirname(__FILE__) . "/../../config/config.dist.php" );
+                require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "config.dist.php" );
                 if ( isset($config) ) {
                     $_SESSION[ 'core_config' ] = $config;
                     $this->settings = $_SESSION[ 'core_config' ];

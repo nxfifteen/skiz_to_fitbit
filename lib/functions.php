@@ -45,7 +45,7 @@
             }
 
             if ( is_writable(dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "logs.log") ) {
-                $logFileName = fopen(dirname(__FILE__) . "/../logs.log", "a");
+                $logFileName = fopen(dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "logs.log", "a");
                 fwrite($logFileName, $msg);
                 fclose($logFileName);
             }

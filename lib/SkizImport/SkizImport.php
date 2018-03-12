@@ -18,7 +18,7 @@
 
     namespace SkizImport;
 
-    require_once( dirname(__FILE__) . "/../autoloader.php" );
+    require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "autoloader.php" );
 
     use djchen\OAuth2\Client\Provider\Fitbit;
     use GuzzleHttp\Exception\BadResponseException;
