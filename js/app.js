@@ -31,76 +31,6 @@ $.grayLightest = '#f8f9fa';
 
 'use strict';
 
-/*****
- * ASYNC LOAD
- * Load JS files and CSS files asynchronously in ajax mode
- */
-function loadJS(jsFiles, pageScript) {
-
-    var i;
-    for (i = 0; i < jsFiles.length; i++) {
-
-        var body = document.getElementsByTagName('body')[0];
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.async = false;
-        script.src = jsFiles[i];
-        body.appendChild(script);
-    }
-
-    if (pageScript) {
-        var body = document.getElementsByTagName('body')[0];
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.async = false;
-        script.src = pageScript;
-        body.appendChild(script);
-    }
-
-    init();
-}
-
-function loadCSS(cssFile, end, callback) {
-
-    var cssArray = {};
-
-    console.log(cssFile);
-
-    if (!cssArray[cssFile]) {
-        cssArray[cssFile] = true;
-
-        if (end == 1) {
-
-            var head = document.getElementsByTagName('head')[0];
-            var s = document.createElement('link');
-            s.setAttribute('rel', 'stylesheet');
-            s.setAttribute('type', 'text/css');
-            s.setAttribute('href', cssFile);
-
-            s.onload = callback;
-            head.appendChild(s);
-
-        } else {
-
-            var head = document.getElementsByTagName('head')[0];
-            var style = document.getElementById('main-style');
-
-            var s = document.createElement('link');
-            s.setAttribute('rel', 'stylesheet');
-            s.setAttribute('type', 'text/css');
-            s.setAttribute('href', cssFile);
-
-            s.onload = callback;
-            head.insertBefore(s, style);
-
-        }
-
-    } else if (callback) {
-        callback();
-    }
-
-}
-
 /****
  * AJAX LOAD
  * Load pages asynchronously in ajax mode
@@ -141,12 +71,8 @@ $(document).ready(function ($) {
 
     // Dropdown Menu
     $.navigation.on('click', 'a', function (e) {
-
-        if ($.ajaxLoad) {
-            e.preventDefault();
-        }
-
         if ($(this).hasClass('nav-dropdown-toggle')) {
+            e.preventDefault();
             $(this).parent().toggleClass('open');
             resizeBroadcast();
         }
