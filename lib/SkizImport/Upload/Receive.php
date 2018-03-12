@@ -625,14 +625,13 @@
 
         public function cleanUp()
         {
-//            $tempDir = $this->getCacheDir() . "/temp/" . $this->getResourceOwner('encodedId');
-//            $this->rrmdir($tempDir);
-//            $uploadDir = $this->getCacheDir() . "/uploads/" . $this->getResourceOwner('encodedId');
-//            $this->rrmdir($uploadDir);
-//
-//            $now   = time();
-//            $this->cleanUpDownlods($this->getCacheDir() . "/downloads", $now);
+            $tempDir = $this->getCacheDir() . "/temp/" . $this->getResourceOwner('encodedId');
+            $this->rrmdir($tempDir);
+            $uploadDir = $this->getCacheDir() . "/uploads/" . $this->getResourceOwner('encodedId');
+            $this->rrmdir($uploadDir);
 
+            $now   = time();
+            $this->cleanUpDownlods($this->getCacheDir() . "/downloads", $now);
         }
 
         private function cleanUpDownlods($dir, $now)
