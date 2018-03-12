@@ -58,5 +58,19 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-inverse card-danger" id="stageProg">
+                    <div class="card-header">
+                        <h4>Download Problems</h4>
+                    </div>
+                    <div class="card-block">
+                        <p>I've become aware some browsers - mainly Firefox & Chrome - are blocking downloaded ZIP files from this site as the file is not commonly downloaded.</p>
+                        <p>If your TCX ZIP file doesn't download as you expect, its worth checking your browsers download manager and see if its 'holding' the file waiting on your approval</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

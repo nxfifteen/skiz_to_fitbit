@@ -27,13 +27,13 @@
     $stateGet = filter_input(INPUT_GET, 'state', FILTER_SANITIZE_STRING);
     if (empty($stateGet) || $stateGet !== $_SESSION[ 'oauth2state' ] ) {
         // Authorise a user against Fitbit's OAuth AIP
-        nxr(0, "New GUEST user registration started");
+        nxr(0, "New PRIVATE user registration started");
 
         // Sent the user off too Fitbit to authenticate
         $helper = new djchen\OAuth2\Client\Provider\Fitbit([
-            'clientId'     => $appClass->getSetting("api_clientId"),
-            'clientSecret' => $appClass->getSetting("api_clientSecret"),
-            'redirectUri'  => $appClass->getSetting("http/") . "register.php"
+            'clientId'     => $appClass->getSetting("api_clientId_personal"),
+            'clientSecret' => $appClass->getSetting("api_clientSecret_personal"),
+            'redirectUri'  => $appClass->getSetting("http/") . "private.php"
         ]);
 
         // Fetch the authorization URL from the provider; this returns the
@@ -53,12 +53,12 @@
         // Redirect the user to the authorization URL.
         header('Location: ' . $authorizationUrl);
     } else {
-        nxr(0, "New GUEST user registration completed");
+        nxr(0, "New PRIVATE user registration completed");
 
         $helper = new djchen\OAuth2\Client\Provider\Fitbit([
-            'clientId'     => $appClass->getSetting("api_clientId"),
-            'clientSecret' => $appClass->getSetting("api_clientSecret"),
-            'redirectUri'  => $appClass->getSetting("http/") . "register.php"
+            'clientId'     => $appClass->getSetting("api_clientId_personal"),
+            'clientSecret' => $appClass->getSetting("api_clientSecret_personal"),
+            'redirectUri'  => $appClass->getSetting("http/") . "private.php"
         ]);
 
         // Try to get an access token using the authorization code grant.

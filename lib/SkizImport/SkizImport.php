@@ -82,7 +82,13 @@
         public function pullFitbit( $path, $returnObject = false )
         {
             if (is_null($this->fitbitLibrary)) {
-                $personal = "_personal";
+                if ( $_COOKIE[ '_nx_skiz_usr' ] == $this->getSetting("ownerFuid") ) {
+//                    nxr(0, "Private Keys Used");
+                    $personal = "_personal";
+                } else {
+//                    nxr(0, "Public Keys Used");
+                    $personal = "";
+                }
 
                 $this->fitbitLibrary = new Fitbit([
                     'clientId'     => $this->getSetting("api_clientId" . $personal, NULL),
@@ -169,7 +175,13 @@
         public function pushFitbit( $path, $pushObject, $returnObject = FALSE, $parseResponse = FALSE )
         {
             if (is_null($this->fitbitLibrary)) {
-                $personal = "_personal";
+                if ( $_COOKIE[ '_nx_skiz_usr' ] == $this->getSetting("ownerFuid") ) {
+//                    nxr(0, "Private Keys Used");
+                    $personal = "_personal";
+                } else {
+//                    nxr(0, "Public Keys Used");
+                    $personal = "";
+                }
 
                 $this->fitbitLibrary = new Fitbit([
                     'clientId'     => $this->getSetting("api_clientId" . $personal, NULL),

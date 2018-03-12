@@ -38,7 +38,8 @@
                                     Use this service to convert your <strong><a style="color: #FFF" href="https://www.corecoders.com/ski-tracks-app/" target="_blank">SkiTracks</a></strong>
                                     SKIZ export files into <strong><a style="color: #FFF" href="https://www.fitbit.com" target="_blank">Fitbit</a></strong> activity
                                 </p>
-                                <a href="./register.php" class="btn btn-primary active mt-3">Sign in Now!</a>
+                                <a href="./register.php" class="btn btn-primary active mt-3" title="Guest sign in using Fitbit">Guest sign in Now!</a>
+                                <a href="./private.php" class="btn btn-danger active mt-3" title="Owners sign in here, this will not work for anyone else due to Fitbit OAuth rules">Site owner sign in here!</a>
                             </div>
                         </div>
                     </div>
@@ -80,7 +81,7 @@
                                 <h2 class="text-center">&amp;</h2>
                                 <ul>
                                     <li><?php echo $siteStats->getSkiTracksRuns(); ?> SkiTrack runs over <?php echo $siteStats->getSkiTracksSession(); ?> session</li>
-                                    <li>Totalling <?php echo $siteStats->getTotalSkiTime(); ?></li>
+                                    <li><?php echo $siteStats->getTotalSkiTime(); ?> of slope time</li>
                                     <li>Covering <?php echo $siteStats->getTotalSkiDistance(); ?></li>
                                 </ul>
                             </div>

@@ -352,16 +352,19 @@
         {
             $apiReturn = json_decode($apiReturn, TRUE);
 
-            if (!is_null($apiReturnHeartRate))
+            if (!is_null($apiReturnHeartRate)) {
                 $apiReturnHeartRate = json_decode($apiReturnHeartRate, TRUE);
+            }
 
             $tempDir = $this->getCacheDir() . "/temp/" . $this->getResourceOwner('encodedId');
             if ( !file_exists($tempDir) ) {
                 mkdir($tempDir, 0755, TRUE);
             }
-
+            nxr(4, "Finding GPS Points");
             list($gpsPoints, $totalDistance) = $this->findGPSPoints($skiRun);
             $this->getStatsClass()->recordDistance($totalDistance);
+
+            nxr(4, "Building TCX from template");
             $tcxContents = '';
             $tcxContents .= $this->templateTCXHeader($skiRun, $apiReturn, $totalDistance);
             $tcxContents .= "                <Track>\n";
@@ -507,16 +510,13 @@
 
         private function findGPSPoints( $skiRun )
         {
-
-            //nxr(0, "Looking for GPS points for " . $skiRun['NAME']);
-            //nxr(1, "Looking for date between " . $skiRun[ 'START_TS' ] . " and " . $skiRun[ 'END_TS' ]);
-
             $loops = 0;
             $totalDistance = 0;
             $prevLat = 0;
             $prevLon = 0;
             $gpsPoints = [];
             $fh = fopen($this->getExtractedPath() . "/Nodes.csv", 'r');
+            nxr(5, ".", TRUE, FALSE);
             while ( !feof($fh) ) {
                 $data = fgetcsv($fh, 200, ",");
                 $loops = $loops + 1;
@@ -542,11 +542,14 @@
 
                     $prevLat = $data[ 1 ];
                     $prevLon = $data[ 2 ];
+
+                    nxr(0, ".", FALSE, FALSE);
                 }
 
                 if ( $data[ 0 ] > $skiRun[ 'END_TS' ] || $loops > 30000 ) break;
             }
             fclose($fh);
+            nxr(1, "[DONE]", FALSE);
 
             return [ $gpsPoints, $totalDistance ];
         }

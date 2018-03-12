@@ -10,9 +10,14 @@
         echo "There was a problem with your upload";
     } else {
         if ( file_exists($cacheDir) AND is_writable($cacheDir) ) {
+            nxr(0, "Pre-processing started");
+
             $receiver = new SkizImport\Upload\Receive($cacheDir);
+            nxr(1, "Storing users uploaded SKIZ file");
             $receiver->storeUploads($_FILES);
+            nxr(1, "Extacting files");
             $receiver->extractSkizFile();
+            nxr(1, "Pre-processing extracted files");
             $receiver->readExtracted();
 
             $_SESSION['SkizImport\Upload\Receive'] = serialize($receiver);
