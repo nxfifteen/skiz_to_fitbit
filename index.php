@@ -54,12 +54,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
-    <meta name="author" content="Łukasz Holeczek">
-    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
-    <link rel="shortcut icon" href="/img/favicon-32x32.png">
+    <meta name="description" content="Import SkiTrack exported SKIZ files into Fitbit as activities">
+    <meta name="author" content="Stuart McCulloch Anderson">
+    <meta name="keyword" content="Fitbit, SkiTracks, Ski Tracks, Fitbit Import, SKIZ">
+    <link rel="shortcut icon" href="img/favicon-32x32.png">
 
-    <title>CoreUI - Open Source Bootstrap Admin Template</title>
+    <title>SkiTracks Fitbit Importer | NxFIFTEEN Rocks</title>
 
     <!-- Icons -->
     <link href="/css/font-awesome.min.css" rel="stylesheet">
@@ -116,7 +116,7 @@
 </div>
 
 <footer class="app-footer">
-    <a href="https://nxfifteen.me.uk/gitlab/nx-fitness/nxfitness-core/wikis/home">NxFITNESS Core</a> &copy; <?php echo date('Y'); ?> Stuart
+    <a href="https://nxfifteen.me.uk/gitlab/rocks/skiz">NxFITNESS Skiz Importer</a> &copy; <?php echo date('Y'); ?> Stuart
     McCulloch Anderson. <span class="float-right d-sm-down-none" id="app-footer-project">An <a href="https://nxfifteen.me.uk">NxFIFTEEN</a> Rocks project, powered by <a href="http://coreui.io">CoreUI</a></span>
 </footer>
 

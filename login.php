@@ -7,12 +7,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="CoreUI Bootstrap 4 Admin Template">
-    <meta name="author" content="Lukasz Holeczek">
-    <meta name="keyword" content="CoreUI Bootstrap 4 Admin Template">
-    <!-- <link rel="shortcut icon" href="assets/ico/favicon.png"> -->
+    <meta name="description" content="Import SkiTrack exported SKIZ files into Fitbit as activities">
+    <meta name="author" content="Stuart McCulloch Anderson">
+    <meta name="keyword" content="Fitbit, SkiTracks, Ski Tracks, Fitbit Import, SKIZ">
+    <link rel="shortcut icon" href="img/favicon-32x32.png">
 
-    <title>CoreUI Bootstrap 4 Admin Template</title>
+    <title>SkiTracks Fitbit Importer | NxFIFTEEN Rocks</title>
 
     <!-- Icons -->
     <link href="css/font-awesome.min.css" rel="stylesheet">
@@ -34,16 +34,19 @@
                         <div class="card-block text-center">
                             <div>
                                 <h2>Sign in with Fitbit</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                <a href="./register.php" class="btn btn-primary active mt-3">Register Now!</a>
+                                <p>
+                                    Use this service to convert your <strong><a style="color: #FFF" href="https://www.corecoders.com/ski-tracks-app/" target="_blank">SkiTracks</a></strong>
+                                    SKIZ export files into <strong><a style="color: #FFF" href="https://www.fitbit.com" target="_blank">Fitbit</a></strong> activity
+                                </p>
+                                <a href="./register.php" class="btn btn-primary active mt-3">Sign in Now!</a>
                             </div>
                         </div>
                     </div>
                     <div class="card card-inverse card-info py-5 d-md-down-none" style="width:44%">
                         <div class="card-block text-center">
                             <div>
-                                <h2>Sign in with Fitbit</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                <h2>Proudly Open Source</h2>
+                                <p>This is an <strong><a style="color: #FFF" href="https://nxfifteen.me.uk/rocks">NxFIFTEEN Rocks</a></strong> project. The service is offered as a free service to anyone who wants to use it and is a freely available open source project</p>
                                 <a href="https://nxfifteen.me.uk/gitlab/rocks/skiz" class="btn btn-primary active mt-3">View source on Gitlab</a>
                                 <a href="https://nxfifteen.me.uk/gitlab/rocks/skiz/wikis/privacy-policy" class="btn btn-primary active mt-3">Privacy Policy</a>
                             </div>
@@ -63,8 +66,10 @@
                             <div>
                                 <h2 class="text-center">We've Processed..</h2>
                                 <ul>
-                                    <li>Created <?php echo $siteStats->getCreatedFitbitActivities(); ?> new Fitbit activities for <?php echo $siteStats->getUniqueUsers(); ?> users</li>
+                                    <li><?php echo $siteStats->getCreatedFitbitActivities(); ?> new Fitbit activities for <?php echo $siteStats->getUniqueUsers(); ?> users</li>
                                     <li>Produced a further <?php echo $siteStats->getUpdatedFitbitActivities(); ?> TCX files</li>
+                                    <li>Received <?php echo $siteStats->getTotalUploadedFiles(); ?> worth of SKIZ files</li>
+                                    <li>Provided <?php echo $siteStats->getTotalDownloadedFiles(); ?> with of zip'd TCX file</li>
                                 </ul>
                             </div>
                         </div>
@@ -72,7 +77,7 @@
                     <div class="card card-inverse card-primary py-5 d-md-down-none" style="width:44%">
                         <div class="card-block">
                             <div>
-                                <h2 class="text-center">&nbsp;</h2>
+                                <h2 class="text-center">&amp;</h2>
                                 <ul>
                                     <li><?php echo $siteStats->getSkiTracksRuns(); ?> SkiTrack runs over <?php echo $siteStats->getSkiTracksSession(); ?> session</li>
                                     <li>Totalling <?php echo $siteStats->getTotalSkiTime(); ?></li>

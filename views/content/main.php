@@ -25,7 +25,7 @@
     <div class="col-sm-6 col-md-8">
 
         <div class="col-sm-12">
-            <div class="card card-info">
+            <div class="card card-info card-inverse">
                 <div class="card-header">
                     SkiTracks
                 </div>
@@ -36,7 +36,7 @@
         </div>
 
         <div class="col-sm-12">
-            <div class="card card-primary">
+            <div class="card card-primary card-inverse">
                 <div class="card-header">
                     Fitbit
                 </div>
@@ -49,7 +49,7 @@
     </div>
 
     <div class="col-sm-12">
-        <div class="card card-warning">
+        <div class="card card-warning card-inverse">
             <div class="card-header">
                 Limitations
             </div>

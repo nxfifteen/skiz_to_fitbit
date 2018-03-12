@@ -255,4 +255,20 @@
 
             return $returnString;
         }
+
+        public function getTotalUploadedFiles()
+        {
+            $returnValue = $this->getNewMedoClass()->sum($this->dbPrefix . 'uploaded', 'filesize');
+            $returnValue = number_format(($returnValue / 1024), 2);
+            //nxr(0, $this->getNewMedoClass()->log());
+            return $returnValue . " MB";
+        }
+
+        public function getTotalDownloadedFiles()
+        {
+            $returnValue = $this->getNewMedoClass()->sum($this->dbPrefix . 'downloaded', 'downloaded');
+            $returnValue = number_format(($returnValue / 1024), 2);
+            //nxr(0, $this->getNewMedoClass()->log());
+            return $returnValue . " MB";
+        }
     }
