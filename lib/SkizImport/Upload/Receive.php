@@ -8,6 +8,7 @@
 
     namespace SkizImport\Upload;
 
+    use SkizImport\Stats;
     use splitbrain\PHPArchive\ArchiveIOException;
     use splitbrain\PHPArchive\Zip;
 
@@ -64,6 +65,17 @@
         private $trackDate;
         private $fileContentsTracks;
         private $downloadPath;
+        private $statsClass;
+
+        public function __sleep()
+        {
+            return array('cacheDir', 'resourceOwner', 'extractedPath', 'uploadPath', 'uploadedSkizFile', 'skiRuns', 'timezoneName', 'timezoneOffset', 'trackName', 'trackDate', 'fileContentsTracks', 'downloadPath');
+        }
+
+        public function __wakeup()
+        {
+            $this->setStatsClass(new Stats());
+        }
 
         /**
          * Receive constructor.
@@ -73,6 +85,7 @@
             $this->setCacheDir($cacheDir);
             $this->setResourceOwner(json_decode($_SESSION[ 'resourceOwner' ], TRUE));
             $this->setUploadPath($cacheDir . "/uploads/" . $this->getResourceOwner('encodedId'));
+            $this->setStatsClass(new Stats());
         }
 
         /**
@@ -144,10 +157,12 @@
 
                 move_uploaded_file($uploadedFile[ 'tmp_name' ], $this->getUploadPath() . '/' . $uploadedFile[ 'name' ]);
 
+                $this->getStatsClass()->recordNewUpload(filesize($this->getUploadPath() . '/' . $uploadedFile[ 'name' ]));
+
                 $this->setUploadedSkizFile($this->getUploadPath() . '/' . $uploadedFile[ 'name' ]);
             }
 
-            nxr(0, "Store file as " . $this->getUploadedSkizFile());
+            //nxr(0, "Store file as " . $this->getUploadedSkizFile());
         }
 
         /**
@@ -220,7 +235,7 @@
                     $timezoneName = timezone_name_from_abbr("", ( $hoursOffset * 3600 ) * -1, FALSE);
                 }
 
-                nxr(0, "TimeZone set to " . $timezoneName);
+                //nxr(0, "TimeZone set to " . $timezoneName);
                 $this->timezoneName = $timezoneName;
                 date_default_timezone_set($timezoneName);
 
@@ -232,7 +247,7 @@
                 $fh = fopen($this->getExtractedPath() . "/Segment.csv", 'r');
                 while ( ( $data = fgetcsv($fh, 100, ",") ) !== FALSE ) {
                     $loops = $loops + 1;
-                    if ( count($data) >= 5 && $data[ 2 ] == TRACK_SEGMENT_SKI_RUN ) {
+                    if ( count($data) >= 5 && $data[ 2 ] <> TRACK_SEGMENT_SKI_LIFT ) {
                         $this->skiRuns[] = [
                             "START_TS"        => explode(".", $data[ 0 ])[ 0 ],
                             "END_TS"          => explode(".", $data[ 1 ])[ 0 ],
@@ -244,6 +259,7 @@
                             "NUMBER"          => $data[ 4 ],
                             "NAME"            => $data[ 5 ]
                         ];
+                        $this->getStatsClass()->recordActivityType($this->lookupActivityType($data[ 3 ]));
                     }
 
                     if ( $loops > 50 ) break;
@@ -257,18 +273,18 @@
         public function checkExtracted()
         {
             if ( !file_exists($this->getExtractedPath() . "/Nodes.csv") ) {
-                nxr(2, "No Nodes found uploaded");
-                nxr(3, $this->getExtractedPath() . "/Nodes.csv");
+                //nxr(2, "No Nodes found uploaded");
+                //nxr(3, $this->getExtractedPath() . "/Nodes.csv");
 
                 return FALSE;
             } else if ( !file_exists($this->getExtractedPath() . "/Segment.csv") ) {
-                nxr(2, "No Segment found uploaded");
-                nxr(3, $this->getExtractedPath() . "/Segment.csv");
+                //nxr(2, "No Segment found uploaded");
+                //nxr(3, $this->getExtractedPath() . "/Segment.csv");
 
                 return FALSE;
             } else if ( !file_exists($this->getExtractedPath() . "/Track.xml") ) {
-                nxr(2, "No Track found uploaded");
-                nxr(3, $this->getExtractedPath() . "/Track.xml");
+                //nxr(2, "No Track found uploaded");
+                //nxr(3, $this->getExtractedPath() . "/Track.xml");
 
                 return FALSE;
             } else {
@@ -345,6 +361,7 @@
             }
 
             list($gpsPoints, $totalDistance) = $this->findGPSPoints($skiRun);
+            $this->getStatsClass()->recordDistance($totalDistance);
             $tcxContents = '';
             $tcxContents .= $this->templateTCXHeader($skiRun, $apiReturn, $totalDistance);
             $tcxContents .= "                <Track>\n";
@@ -491,8 +508,8 @@
         private function findGPSPoints( $skiRun )
         {
 
-            nxr(0, "Looking for GPS points for " . $skiRun['NAME']);
-            nxr(1, "Looking for date between " . $skiRun[ 'START_TS' ] . " and " . $skiRun[ 'END_TS' ]);
+            //nxr(0, "Looking for GPS points for " . $skiRun['NAME']);
+            //nxr(1, "Looking for date between " . $skiRun[ 'START_TS' ] . " and " . $skiRun[ 'END_TS' ]);
 
             $loops = 0;
             $totalDistance = 0;
@@ -619,6 +636,8 @@
 
                 $tar->close();
 
+                $this->getStatsClass()->recordZipDownloadSize(filesize($downloadFile));
+
                 $this->downloadPath = "/cache/" . "/downloads/" . $this->getResourceOwner('encodedId') . "/" . str_ireplace("/","-",$tracksFile['@attributes']['name']) . ".zip";
             } catch ( ArchiveIOException $e ) {}
         }
@@ -683,5 +702,21 @@
             } else {
                 $this->skiRuns[ $index ][ 'HEART' ] = FALSE;
             }
+        }
+
+        /**
+         * @return \SkizImport\Stats
+         */
+        public function getStatsClass()
+        {
+            return $this->statsClass;
+        }
+
+        /**
+         * @param \SkizImport\Stats $statsClass
+         */
+        public function setStatsClass( $statsClass )
+        {
+            $this->statsClass = $statsClass;
         }
     }

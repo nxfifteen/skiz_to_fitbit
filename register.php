@@ -17,6 +17,7 @@
      */
 
     use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+    use SkizImport\Stats;
 
     require_once (dirname(__FILE__) . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "autoloader.php");
 
@@ -28,7 +29,7 @@
     $stateGet = filter_input(INPUT_GET, 'state', FILTER_SANITIZE_STRING);
     if (empty($stateGet) || $stateGet !== $_SESSION[ 'oauth2state' ] ) {
         // Authorise a user against Fitbit's OAuth AIP
-        nxr(0, "New user registration started");
+        //nxr(0, "New user registration started");
 
         // Sent the user off too Fitbit to authenticate
         $helper = new djchen\OAuth2\Client\Provider\Fitbit([
@@ -86,6 +87,9 @@
             '/',
             filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_STRING),true, false
         );
+
+        $stats = new Stats();
+        $stats->recordNewUser(gen_cookie_hash($appClass->getSetting("salt"), gen_cookie_hash($appClass->getSetting("salt"), $resourceOwner->getId())));
 
         // Redirect the user to the authorization URL.
         header('Location: ' . $appClass->getSetting("http/") . "#main.html");
