@@ -4,7 +4,8 @@
     "type": "project",
     "require": {
         "djchen/oauth2-fitbit": "^1.0",
-        "splitbrain/php-archive": "^1.0"
+        "splitbrain/php-archive": "^1.0",
+        "catfan/medoo": "^1.5"
     },
     "config": {
         "vendor-dir": "vendor"
