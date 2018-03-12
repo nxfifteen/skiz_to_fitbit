@@ -68,7 +68,7 @@
         // Find out who the new OAuth keys belong too
         $resourceOwner = $helper->getResourceOwner($accessToken);
 
-        $_SESSION['accessToken'] = $accessToken;
+        $_SESSION['accessToken'] = json_encode($accessToken);
         $_SESSION['resourceOwner'] = json_encode($resourceOwner->toArray());
 
         setcookie(

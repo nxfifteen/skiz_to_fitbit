@@ -6,4 +6,4 @@
 
     nxr_destroy_session();
 
-    header("Location: " . $_SESSION[ 'core_config' ][ 'http/' ] . 'login.php');
+    header("Location: /login.php");

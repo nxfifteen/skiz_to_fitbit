@@ -31,6 +31,9 @@
         case "upload/send":
             require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "forms" . DIRECTORY_SEPARATOR . "receive.php" );
             break;
+        case "upload/confirmed":
+            require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "forms" . DIRECTORY_SEPARATOR . "confirmed.php" );
+            break;
     }
 
     $pageContent = dirname(__FILE__) . DIRECTORY_SEPARATOR . "views" . DIRECTORY_SEPARATOR . "content" . DIRECTORY_SEPARATOR . $url_namespace . ".php";

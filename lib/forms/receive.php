@@ -16,11 +16,6 @@
             $receiver->readExtracted();
 
             $_SESSION['SkizImport\Upload\Receive'] = serialize($receiver);
-
-            /*if (is_dir($uploadPath)) {
-                nxr(2, "Deleting " . $uploadPath);
-                rrmdir($uploadPath);
-            }*/
         }
     }
 
