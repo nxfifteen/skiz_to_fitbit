@@ -4,6 +4,6 @@
 
     echo '<ol class="breadcrumb">';
     foreach ( $breadcrums as $breadcrum ) {
-        echo '<li class="breadcrumb-item">'.$breadcrum.'</li>';
+        echo '<li class="breadcrumb-item">'.ucwords($breadcrum).'</li>';
     }
     echo '</ol>';
