@@ -1,4 +1,4 @@
-NxFitness SKIZ - A PHP Fitbit API Project
+NxFIFTEEN SkiTracks to Fitbit Importer
 =========================================
 
 ###### Version: 0.0.0.1
@@ -46,7 +46,7 @@ If you have something that will help please [let me know](https://nxfifteen.me.u
 And of course:
 
 * GPL v3
-* This license is available online at [https://nxfifteen.me.uk/api/license/gpl-3/2018/license.html](https://nxfifteen.me.uk/api/license/gpl-3/2018/license.html)
+* This license is available online at [https://license.nxfifteen.rocks/gpl-3/2018/](https://license.nxfifteen.rocks/gpl-3/2018/)
 * Copyright (c) 2014-2018 [Stuart McCulloch Anderson](https://nx15.at/whoami)
 
 
