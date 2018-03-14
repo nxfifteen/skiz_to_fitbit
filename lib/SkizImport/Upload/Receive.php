@@ -63,29 +63,58 @@
     class Receive
     {
 
+        /**
+         * @var
+         */
         private $cacheDir;
+        /**
+         * @var
+         */
         private $resourceOwner;
+        /**
+         * @var
+         */
         private $extractedPath;
+        /**
+         * @var
+         */
         private $uploadPath;
+        /**
+         * @var
+         */
         private $uploadedSkizFile;
+        /**
+         * @var
+         */
         private $skiRuns;
+        /**
+         * @var
+         */
         private $timezoneName;
+        /**
+         * @var
+         */
         private $timezoneOffset;
+        /**
+         * @var
+         */
         private $trackName;
+        /**
+         * @var
+         */
         private $trackDate;
+        /**
+         * @var
+         */
         private $fileContentsTracks;
+        /**
+         * @var
+         */
         private $downloadPath;
+        /**
+         * @var
+         */
         private $statsClass;
-
-        public function __sleep()
-        {
-            return array('cacheDir', 'resourceOwner', 'extractedPath', 'uploadPath', 'uploadedSkizFile', 'skiRuns', 'timezoneName', 'timezoneOffset', 'trackName', 'trackDate', 'fileContentsTracks', 'downloadPath');
-        }
-
-        public function __wakeup()
-        {
-            $this->setStatsClass(new Stats());
-        }
 
         /**
          * Receive constructor.
@@ -136,6 +165,25 @@
         }
 
         /**
+         * @return array
+         */
+        public function __sleep()
+        {
+            return array(
+                'cacheDir', 'resourceOwner', 'extractedPath', 'uploadPath', 'uploadedSkizFile', 'skiRuns',
+                'timezoneName', 'timezoneOffset', 'trackName', 'trackDate', 'fileContentsTracks', 'downloadPath'
+            );
+        }
+
+        /**
+         *
+         */
+        public function __wakeup()
+        {
+            $this->setStatsClass(new Stats());
+        }
+
+        /**
          * @return mixed
          */
         public function getTimezoneName()
@@ -165,9 +213,9 @@
                     unlink($this->getUploadPath() . DIRECTORY_SEPARATOR . $uploadedFile[ 'name' ]);
                 }
 
-                if ( mime_content_type ( $uploadedFile[ 'tmp_name' ] ) != "application/zip" ) {
+                if ( mime_content_type($uploadedFile[ 'tmp_name' ]) != "application/zip" ) {
                     nxr(0, "[ERROR] Unknown MIME type uploaded:");
-                    nxr(1, mime_content_type ( $uploadedFile[ 'tmp_name' ] ));
+                    nxr(1, mime_content_type($uploadedFile[ 'tmp_name' ]));
                     nxr(1, "Uploaded by " . $this->getResourceOwner('fullName') . " (" . $this->getResourceOwner('encodedId') . ")");
 
                     die("Something is wrong with you upload. We only accept SKIZ files from SkiTracks");
@@ -193,19 +241,27 @@
         }
 
         /**
+         * @return \SkizImport\Stats
+         */
+        public function getStatsClass()
+        {
+            return $this->statsClass;
+        }
+
+        /**
+         * @param \SkizImport\Stats $statsClass
+         */
+        public function setStatsClass( $statsClass )
+        {
+            $this->statsClass = $statsClass;
+        }
+
+        /**
          * @param mixed $uploadedSkizFile
          */
         private function setUploadedSkizFile( $uploadedSkizFile )
         {
             $this->uploadedSkizFile = $uploadedSkizFile;
-        }
-
-        /**
-         * @return mixed
-         */
-        private function getUploadedSkizFile()
-        {
-            return $this->uploadedSkizFile;
         }
 
         /**
@@ -232,6 +288,14 @@
         }
 
         /**
+         * @return mixed
+         */
+        private function getUploadedSkizFile()
+        {
+            return $this->uploadedSkizFile;
+        }
+
+        /**
          * @param mixed $extractedPath
          */
         private function setExtractedPath( $extractedPath )
@@ -239,6 +303,9 @@
             $this->extractedPath = $extractedPath;
         }
 
+        /**
+         * @return bool
+         */
         public function readExtracted()
         {
             if ( $this->checkExtracted() ) {
@@ -289,6 +356,9 @@
             }
         }
 
+        /**
+         * @return bool
+         */
         public function checkExtracted()
         {
             if ( !file_exists($this->getExtractedPath() . DIRECTORY_SEPARATOR . "Nodes.csv") ) {
@@ -311,107 +381,9 @@
         }
 
         /**
-         * @return mixed
+         * @param $int
+         * @return string
          */
-        public function getSkiRuns()
-        {
-            return $this->skiRuns;
-        }
-
-        /**
-         * @return mixed
-         */
-        public function getTrackName()
-        {
-            return $this->trackName;
-        }
-
-        /**
-         * @param mixed $trackName
-         */
-        public function setTrackName( $trackName )
-        {
-            $this->trackName = $trackName;
-        }
-
-        /**
-         * @return mixed
-         */
-        public function getTrackDate()
-        {
-            return $this->trackDate;
-        }
-
-        /**
-         * @param mixed $trackDate
-         */
-        public function setTrackDate( $trackDate )
-        {
-            $this->trackDate = $trackDate;
-        }
-
-        /**
-         * @return mixed
-         */
-        public function getFileContentsTracks()
-        {
-            return json_decode($this->fileContentsTracks, TRUE);
-        }
-
-        public function createTCX( $skiRun, $apiReturn, $apiReturnHeartRate )
-        {
-            $apiReturn = json_decode($apiReturn, TRUE);
-
-            if (!is_null($apiReturnHeartRate)) {
-                $apiReturnHeartRate = json_decode($apiReturnHeartRate, TRUE);
-            }
-
-            $tempDir = $this->getCacheDir() . DIRECTORY_SEPARATOR . "temp" . DIRECTORY_SEPARATOR . $this->getResourceOwner('encodedId');
-            if ( !file_exists($tempDir) ) {
-                mkdir($tempDir, 0755, TRUE);
-            }
-            nxr(4, "Finding GPS Points");
-            list($gpsPoints, $totalDistance) = $this->findGPSPoints($skiRun);
-            $this->getStatsClass()->recordDistance($totalDistance);
-
-            nxr(4, "Building TCX from template");
-            $tcxContents = '';
-            $tcxContents .= $this->templateTCXHeader($skiRun, $apiReturn, $totalDistance);
-            $tcxContents .= "                <Track>\n";
-            foreach ( $gpsPoints as $gpsPoint ) {
-                $tcxContents .= "                    <Trackpoint>\n";
-                $tcxContents .= "                        <Time>" . str_ireplace("+", ".000+", date("c", $gpsPoint[ 'UTC' ])) . "</Time>\n";
-                $tcxContents .= "                        <Position>\n";
-                $tcxContents .= "                            <LatitudeDegrees>" . $gpsPoint['LAT'] . "</LatitudeDegrees>\n";
-                $tcxContents .= "                            <LongitudeDegrees>" . $gpsPoint['LON'] . "</LongitudeDegrees>\n";
-                $tcxContents .= "                        </Position>\n";
-                $tcxContents .= "                        <AltitudeMeters>" . $gpsPoint['ALT'] . "</AltitudeMeters>\n";
-                $tcxContents .= "                        <DistanceMeters>" . $gpsPoint['DISTANCE'] . "</DistanceMeters>\n";
-                if (is_array($apiReturnHeartRate)) {
-                    $tcxContents .= "                        <HeartRateBpm>\n";
-                    $tcxContents .= "                            <Value>" . $this->findHeartRate(date("H:i:s", $gpsPoint[ 'UTC' ]), $apiReturnHeartRate) . "</Value>\n";
-                    $tcxContents .= "                        </HeartRateBpm>\n";
-                }
-                $tcxContents .= "                    </Trackpoint>\n";
-            }
-            $tcxContents .= "                </Track>\n";
-            $tcxContents .= $this->templateTCXFooter();
-
-            if (file_exists($tempDir . DIRECTORY_SEPARATOR . $skiRun['NAME'] . ".tcx")) {
-                unlink($tempDir . DIRECTORY_SEPARATOR . $skiRun['NAME'] . ".tcx");
-            }
-            file_put_contents($tempDir . DIRECTORY_SEPARATOR . $skiRun['NAME'] . ".tcx", $tcxContents);
-
-        }
-
-        /**
-         * @return mixed
-         */
-        private function getCacheDir()
-        {
-            return $this->cacheDir;
-        }
-
         private function lookupActivityType( $int )
         {
             switch ( $int ) {
@@ -472,6 +444,10 @@
             }
         }
 
+        /**
+         * @param $int
+         * @return string
+         */
         private function lookupActivityTypeFitbit( $int )
         {
             switch ( $int ) {
@@ -494,30 +470,108 @@
         }
 
         /**
-         * Calculates the great-circle distance between two points, with
-         * the Haversine formula.
-         * @param float $latitudeFrom  Latitude of start point in [deg decimal]
-         * @param float $longitudeFrom Longitude of start point in [deg decimal]
-         * @param float $latitudeTo    Latitude of target point in [deg decimal]
-         * @param float $longitudeTo   Longitude of target point in [deg decimal]
-         * @param float $earthRadius   Mean earth radius in [m]
-         * @return float Distance between points in [m] (same as earthRadius)
+         * @return mixed
          */
-        private function haversineGreatCircleDistance( $latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $earthRadius = 6371000 )
+        public function getSkiRuns()
         {
-            // convert from degrees to radians
-            $latFrom = deg2rad($latitudeFrom);
-            $lonFrom = deg2rad($longitudeFrom);
-            $latTo = deg2rad($latitudeTo);
-            $lonTo = deg2rad($longitudeTo);
-
-            $latDelta = $latTo - $latFrom;
-            $lonDelta = $lonTo - $lonFrom;
-
-            $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) + cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
-            return $angle * $earthRadius;
+            return $this->skiRuns;
         }
 
+        /**
+         * @return mixed
+         */
+        public function getTrackName()
+        {
+            return $this->trackName;
+        }
+
+        /**
+         * @param mixed $trackName
+         */
+        public function setTrackName( $trackName )
+        {
+            $this->trackName = $trackName;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function getTrackDate()
+        {
+            return $this->trackDate;
+        }
+
+        /**
+         * @param mixed $trackDate
+         */
+        public function setTrackDate( $trackDate )
+        {
+            $this->trackDate = $trackDate;
+        }
+
+        /**
+         * @param $skiRun
+         * @param $apiReturn
+         * @param $apiReturnHeartRate
+         */
+        public function createTCX( $skiRun, $apiReturn, $apiReturnHeartRate )
+        {
+            $apiReturn = json_decode($apiReturn, TRUE);
+
+            if ( !is_null($apiReturnHeartRate) ) {
+                $apiReturnHeartRate = json_decode($apiReturnHeartRate, TRUE);
+            }
+
+            $tempDir = $this->getCacheDir() . DIRECTORY_SEPARATOR . "temp" . DIRECTORY_SEPARATOR . $this->getResourceOwner('encodedId');
+            if ( !file_exists($tempDir) ) {
+                mkdir($tempDir, 0755, TRUE);
+            }
+            nxr(4, "Finding GPS Points");
+            list($gpsPoints, $totalDistance) = $this->findGPSPoints($skiRun);
+            $this->getStatsClass()->recordDistance($totalDistance);
+
+            nxr(4, "Building TCX from template");
+            $tcxContents = '';
+            $tcxContents .= $this->templateTCXHeader($skiRun, $apiReturn, $totalDistance);
+            $tcxContents .= "                <Track>\n";
+            foreach ( $gpsPoints as $gpsPoint ) {
+                $tcxContents .= "                    <Trackpoint>\n";
+                $tcxContents .= "                        <Time>" . str_ireplace("+", ".000+", date("c", $gpsPoint[ 'UTC' ])) . "</Time>\n";
+                $tcxContents .= "                        <Position>\n";
+                $tcxContents .= "                            <LatitudeDegrees>" . $gpsPoint[ 'LAT' ] . "</LatitudeDegrees>\n";
+                $tcxContents .= "                            <LongitudeDegrees>" . $gpsPoint[ 'LON' ] . "</LongitudeDegrees>\n";
+                $tcxContents .= "                        </Position>\n";
+                $tcxContents .= "                        <AltitudeMeters>" . $gpsPoint[ 'ALT' ] . "</AltitudeMeters>\n";
+                $tcxContents .= "                        <DistanceMeters>" . $gpsPoint[ 'DISTANCE' ] . "</DistanceMeters>\n";
+                if ( is_array($apiReturnHeartRate) ) {
+                    $tcxContents .= "                        <HeartRateBpm>\n";
+                    $tcxContents .= "                            <Value>" . $this->findHeartRate(date("H:i:s", $gpsPoint[ 'UTC' ]), $apiReturnHeartRate) . "</Value>\n";
+                    $tcxContents .= "                        </HeartRateBpm>\n";
+                }
+                $tcxContents .= "                    </Trackpoint>\n";
+            }
+            $tcxContents .= "                </Track>\n";
+            $tcxContents .= $this->templateTCXFooter();
+
+            if ( file_exists($tempDir . DIRECTORY_SEPARATOR . $skiRun[ 'NAME' ] . ".tcx") ) {
+                unlink($tempDir . DIRECTORY_SEPARATOR . $skiRun[ 'NAME' ] . ".tcx");
+            }
+            file_put_contents($tempDir . DIRECTORY_SEPARATOR . $skiRun[ 'NAME' ] . ".tcx", $tcxContents);
+
+        }
+
+        /**
+         * @return mixed
+         */
+        private function getCacheDir()
+        {
+            return $this->cacheDir;
+        }
+
+        /**
+         * @param $skiRun
+         * @return array
+         */
         private function findGPSPoints( $skiRun )
         {
             $loops = 0;
@@ -564,6 +618,37 @@
             return [ $gpsPoints, $totalDistance ];
         }
 
+        /**
+         * Calculates the great-circle distance between two points, with
+         * the Haversine formula.
+         * @param float $latitudeFrom  Latitude of start point in [deg decimal]
+         * @param float $longitudeFrom Longitude of start point in [deg decimal]
+         * @param float $latitudeTo    Latitude of target point in [deg decimal]
+         * @param float $longitudeTo   Longitude of target point in [deg decimal]
+         * @param float $earthRadius   Mean earth radius in [m]
+         * @return float Distance between points in [m] (same as earthRadius)
+         */
+        private function haversineGreatCircleDistance( $latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $earthRadius = 6371000 )
+        {
+            // convert from degrees to radians
+            $latFrom = deg2rad($latitudeFrom);
+            $lonFrom = deg2rad($longitudeFrom);
+            $latTo = deg2rad($latitudeTo);
+            $lonTo = deg2rad($longitudeTo);
+
+            $latDelta = $latTo - $latFrom;
+            $lonDelta = $lonTo - $lonFrom;
+
+            $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) + cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+            return $angle * $earthRadius;
+        }
+
+        /**
+         * @param $skiRun
+         * @param $apiReturn
+         * @param $totalDistance
+         * @return string
+         */
         private function templateTCXHeader( $skiRun, $apiReturn, $totalDistance )
         {
             $trackFile = $this->getFileContentsTracks();
@@ -589,6 +674,40 @@
             return $tcxContents;
         }
 
+        /**
+         * @return mixed
+         */
+        public function getFileContentsTracks()
+        {
+            return json_decode($this->fileContentsTracks, TRUE);
+        }
+
+        /**
+         * @param $date
+         * @param $apiReturnHeartRate
+         * @return int
+         */
+        private function findHeartRate( $date, $apiReturnHeartRate )
+        {
+            $lastValue = -2;
+            foreach ( $apiReturnHeartRate[ 'activities-heart-intraday' ][ 'dataset' ] as $item ) {
+                if ( strtotime(date("Y-m-d ") . $item[ 'time' ]) < strtotime(date("Y-m-d ") . $date) ) {
+                    if ( $item[ 'time' ] == $date ) {
+                        return $item[ 'value' ];
+                    } else {
+                        $lastValue = $item[ 'value' ];
+                    }
+                } else {
+                    return $lastValue;
+                }
+            }
+
+            return -1;
+        }
+
+        /**
+         * @return string
+         */
         private function templateTCXFooter()
         {
             $trackFile = $this->getFileContentsTracks();
@@ -605,24 +724,9 @@
 
         }
 
-        private function findHeartRate( $date, $apiReturnHeartRate )
-        {
-            $lastValue = -2;
-            foreach ( $apiReturnHeartRate['activities-heart-intraday']['dataset'] as $item ) {
-                if (strtotime(date("Y-m-d ") . $item['time']) < strtotime(date("Y-m-d ") . $date)) {
-                    if ( $item[ 'time' ] == $date ) {
-                        return $item[ 'value' ];
-                    } else {
-                        $lastValue = $item[ 'value' ];
-                    }
-                } else {
-                    return $lastValue;
-                }
-            }
-
-            return -1;
-        }
-
+        /**
+         *
+         */
         public function createZipDownload()
         {
             $tempDir = $this->getCacheDir() . DIRECTORY_SEPARATOR . "temp" . DIRECTORY_SEPARATOR . $this->getResourceOwner('encodedId');
@@ -631,16 +735,16 @@
                 mkdir($downloadDir, 0755, TRUE);
             }
             $tracksFile = $this->getFileContentsTracks();
-            $downloadFile = $downloadDir . DIRECTORY_SEPARATOR . str_ireplace("/","-",$tracksFile['@attributes']['name']) . ".zip";
+            $downloadFile = $downloadDir . DIRECTORY_SEPARATOR . str_ireplace("/", "-", $tracksFile[ '@attributes' ][ 'name' ]) . ".zip";
 
             $tar = new Zip();
             try {
                 $tar->create($downloadFile);
-                if (is_dir($tempDir)) {
+                if ( is_dir($tempDir) ) {
                     $objects = scandir($tempDir);
-                    foreach ($objects as $object) {
-                        if ($object != "." && $object != "..") {
-                            if (filetype($tempDir . DIRECTORY_SEPARATOR . $object) == "file")
+                    foreach ( $objects as $object ) {
+                        if ( $object != "." && $object != ".." ) {
+                            if ( filetype($tempDir . DIRECTORY_SEPARATOR . $object) == "file" )
                                 $tar->addFile($tempDir . DIRECTORY_SEPARATOR . $object, $object);
                         }
                     }
@@ -651,10 +755,14 @@
 
                 $this->getStatsClass()->recordZipDownloadSize(filesize($downloadFile));
 
-                $this->downloadPath = "/cache/" . "/downloads/" . $this->getResourceOwner('encodedId') . "/" . str_ireplace("/","-",$tracksFile['@attributes']['name']) . ".zip";
-            } catch ( ArchiveIOException $e ) {}
+                $this->downloadPath = "/cache/" . "/downloads/" . $this->getResourceOwner('encodedId') . "/" . str_ireplace("/", "-", $tracksFile[ '@attributes' ][ 'name' ]) . ".zip";
+            } catch ( ArchiveIOException $e ) {
+            }
         }
 
+        /**
+         *
+         */
         public function cleanUp()
         {
             $tempDir = $this->getCacheDir() . DIRECTORY_SEPARATOR . "temp" . DIRECTORY_SEPARATOR . $this->getResourceOwner('encodedId');
@@ -662,39 +770,44 @@
             $uploadDir = $this->getCacheDir() . DIRECTORY_SEPARATOR . "uploads" . DIRECTORY_SEPARATOR . $this->getResourceOwner('encodedId');
             $this->rrmdir($uploadDir);
 
-            $now   = time();
+            $now = time();
             $this->cleanUpDownlods($this->getCacheDir() . DIRECTORY_SEPARATOR . "downloads", $now);
-        }
-
-        private function cleanUpDownlods($dir, $now)
-        {
-            $files = scandir($dir);
-            foreach ($files as $file) {
-                if ($file != "." && $file != "..") {
-                    if (is_file($dir . DIRECTORY_SEPARATOR . $file)) {
-                        if ($now - filemtime($dir . DIRECTORY_SEPARATOR . $file) >= 60 * 20) { // 2 days
-                            unlink($dir . DIRECTORY_SEPARATOR . $file);
-                        }
-                    } else if (is_dir($dir . DIRECTORY_SEPARATOR . $file)) {
-                        $this->cleanUpDownlods($dir . DIRECTORY_SEPARATOR . $file, $now);
-                    }
-                }
-            }
         }
 
         /**
          * @param $dir
          */
-        private function rrmdir( $dir) {
-            if (is_dir($dir)) {
+        private function rrmdir( $dir )
+        {
+            if ( is_dir($dir) ) {
                 $objects = scandir($dir);
-                foreach ($objects as $object) {
-                    if ($object != "." && $object != "..") {
-                        if (filetype($dir . DIRECTORY_SEPARATOR . $object) == "dir") $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object); else unlink($dir . DIRECTORY_SEPARATOR . $object);
+                foreach ( $objects as $object ) {
+                    if ( $object != "." && $object != ".." ) {
+                        if ( filetype($dir . DIRECTORY_SEPARATOR . $object) == "dir" ) $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object); else unlink($dir . DIRECTORY_SEPARATOR . $object);
                     }
                 }
                 reset($objects);
                 rmdir($dir);
+            }
+        }
+
+        /**
+         * @param $dir
+         * @param $now
+         */
+        private function cleanUpDownlods( $dir, $now )
+        {
+            $files = scandir($dir);
+            foreach ( $files as $file ) {
+                if ( $file != "." && $file != ".." ) {
+                    if ( is_file($dir . DIRECTORY_SEPARATOR . $file) ) {
+                        if ( $now - filemtime($dir . DIRECTORY_SEPARATOR . $file) >= 60 * 20 ) { // 2 days
+                            unlink($dir . DIRECTORY_SEPARATOR . $file);
+                        }
+                    } else if ( is_dir($dir . DIRECTORY_SEPARATOR . $file) ) {
+                        $this->cleanUpDownlods($dir . DIRECTORY_SEPARATOR . $file, $now);
+                    }
+                }
             }
         }
 
@@ -706,30 +819,19 @@
             return $this->downloadPath;
         }
 
+        /**
+         * @param $index
+         * @param $apiReturnActivity
+         * @param $apiReturnHeartRate
+         */
         public function updateSkiRuns( $index, $apiReturnActivity, $apiReturnHeartRate )
         {
-            $apiReturnActivity = json_decode($apiReturnActivity, true);
-            $this->skiRuns[$index]['FITBIT'] = $apiReturnActivity["activityLog"]["logId"];
-            if (is_null($apiReturnHeartRate)) {
+            $apiReturnActivity = json_decode($apiReturnActivity, TRUE);
+            $this->skiRuns[ $index ][ 'FITBIT' ] = $apiReturnActivity[ "activityLog" ][ "logId" ];
+            if ( is_null($apiReturnHeartRate) ) {
                 $this->skiRuns[ $index ][ 'HEART' ] = TRUE;
             } else {
                 $this->skiRuns[ $index ][ 'HEART' ] = FALSE;
             }
-        }
-
-        /**
-         * @return \SkizImport\Stats
-         */
-        public function getStatsClass()
-        {
-            return $this->statsClass;
-        }
-
-        /**
-         * @param \SkizImport\Stats $statsClass
-         */
-        public function setStatsClass( $statsClass )
-        {
-            $this->statsClass = $statsClass;
         }
     }

@@ -21,12 +21,15 @@
     require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "autoloader.php" );
 
     use djchen\OAuth2\Client\Provider\Fitbit;
-    use GuzzleHttp\Exception\BadResponseException;
     use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
     use League\OAuth2\Client\Token\AccessToken;
 
     define("FITBIT_COM", "https://api.fitbit.com");
 
+    /**
+     * Class SkizImport
+     * @package SkizImport
+     */
     class SkizImport
     {
         /**
@@ -39,36 +42,17 @@
          */
         protected $fitbitLibrary;
 
+        /**
+         * @var
+         */
         private $activitId;
 
         /**
          * SkizImport constructor.
          */
-        public function __construct( )
+        public function __construct()
         {
             $this->setSettings(new Config());
-        }
-
-        /**
-         * @return \SkizImport\Config
-         */
-        public function getSettings()
-        {
-            return $this->settings;
-        }
-
-        /**
-         * Get settings from config class
-         *
-         * @param string $key        Settings key to return
-         * @param null   $default    Default value, if nothing already held in settings
-         * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-         *
-         * @return string
-         */
-        public function getSetting( $key, $default = NULL )
-        {
-            return $this->getSettings()->get($key, $default);
         }
 
         /**
@@ -79,9 +63,14 @@
             $this->settings = $settings;
         }
 
-        public function pullFitbit( $path, $returnObject = false )
+        /**
+         * @param      $path
+         * @param bool $returnObject
+         * @return mixed|null
+         */
+        public function pullFitbit( $path, $returnObject = FALSE )
         {
-            if (is_null($this->fitbitLibrary)) {
+            if ( is_null($this->fitbitLibrary) ) {
                 if ( $_COOKIE[ '_nx_skiz_usr' ] == $this->getSetting("ownerFuid") ) {
 //                    nxr(0, "Private Keys Used");
                     $personal = "_personal";
@@ -107,8 +96,8 @@
 
             try {
                 $response = $this->fitbitLibrary->getParsedResponse($request);
-            } catch (IdentityProviderException $e) {
-                return null;
+            } catch ( IdentityProviderException $e ) {
+                return NULL;
             }
 
             if ( $returnObject ) {
@@ -119,12 +108,34 @@
         }
 
         /**
+         * Get settings from config class
+         *
+         * @param string $key     Settings key to return
+         * @param null   $default Default value, if nothing already held in settings
+         * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+         *
+         * @return string
+         */
+        public function getSetting( $key, $default = NULL )
+        {
+            return $this->getSettings()->get($key, $default);
+        }
+
+        /**
+         * @return \SkizImport\Config
+         */
+        public function getSettings()
+        {
+            return $this->settings;
+        }
+
+        /**
          * @SuppressWarnings(PHPMD.ExitExpression)
          * @return AccessToken
          */
         private function getAccessToken()
         {
-            $userArray = json_decode($_SESSION['accessToken'], true);
+            $userArray = json_decode($_SESSION[ 'accessToken' ], TRUE);
             if ( is_array($userArray) ) {
                 $accessToken = new AccessToken([
                     'access_token'  => $userArray[ 'access_token' ],
@@ -150,31 +161,46 @@
             }
         }
 
-        public function setActivitId( $key, $id )
-        {
-            if (is_null($this->activitId)) {
-                $this->activitId = [];
-            }
-
-            $this->activitId[$key] = $id;
-        }
-
+        /**
+         * @param $string
+         * @return mixed|null
+         */
         public function getActivitId( $string )
         {
-            if (is_null($this->activitId)) {
+            if ( is_null($this->activitId) ) {
                 $this->activitId = [];
             }
 
             if ( array_key_exists($string, $this->activitId) ) {
-                return $this->activitId[$string];
+                return $this->activitId[ $string ];
             } else {
-                return null;
+                return NULL;
             }
         }
 
+        /**
+         * @param $key
+         * @param $id
+         */
+        public function setActivitId( $key, $id )
+        {
+            if ( is_null($this->activitId) ) {
+                $this->activitId = [];
+            }
+
+            $this->activitId[ $key ] = $id;
+        }
+
+        /**
+         * @param      $path
+         * @param      $pushObject
+         * @param bool $returnObject
+         * @param bool $parseResponse
+         * @return array|mixed|\Psr\Http\Message\ResponseInterface
+         */
         public function pushFitbit( $path, $pushObject, $returnObject = FALSE, $parseResponse = FALSE )
         {
-            if (is_null($this->fitbitLibrary)) {
+            if ( is_null($this->fitbitLibrary) ) {
                 if ( $_COOKIE[ '_nx_skiz_usr' ] == $this->getSetting("ownerFuid") ) {
 //                    nxr(0, "Private Keys Used");
                     $personal = "_personal";

@@ -20,6 +20,10 @@
 
     require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "autoloader.php" );
 
+    /**
+     * Class Config
+     * @package SkizImport
+     */
     class Config
     {
 
@@ -54,14 +58,14 @@
          * Main function called to query settings for value. Default value can be provided, if not NULL is returned.
          * Values can be queried in the database or limited to config file and 'live' values
          *
-         * @param string $key        Setting to query
-         * @param string $default    Default value to return
+         * @param string $key     Setting to query
+         * @param string $default Default value to return
          *
          * @return string Setting value, or default as per defined
          */
         public function get( $key, $default = NULL )
         {
-            if (array_key_exists($key, $this->settings)) {
+            if ( array_key_exists($key, $this->settings) ) {
                 return $this->settings[ $key ];
             } else {
                 return $default;
@@ -72,8 +76,8 @@
          * Set setting value
          * Function to store/change setting values. Values can be stored in the database or held in memory.
          *
-         * @param string $key        Setting to query
-         * @param string $value      Value to store
+         * @param string $key   Setting to query
+         * @param string $value Value to store
          * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
          *
          * @return bool was data stored correctly

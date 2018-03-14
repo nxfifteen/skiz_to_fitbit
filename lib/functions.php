@@ -37,11 +37,11 @@
          */
         function nxr( $indentation, $msg, $includeDate = TRUE, $newline = TRUE, $echoLine = TRUE )
         {
-            if ($indentation >= 0) {
+            if ( $indentation >= 0 ) {
                 $_SESSION[ 'indentation' ] = $indentation;
-            } else if ($indentation < -1) {
-                $indentation = $_SESSION[ 'indentation' ] + (($indentation * -1) - 1);
-            } else if ($indentation == -1) {
+            } else if ( $indentation < -1 ) {
+                $indentation = $_SESSION[ 'indentation' ] + ( ( $indentation * -1 ) - 1 );
+            } else if ( $indentation == -1 ) {
                 $indentation = $_SESSION[ 'indentation' ];
             }
 
@@ -97,7 +97,8 @@
         }
     }
 
-    function getNameSpace() {
+    function getNameSpace()
+    {
         if ( array_key_exists("REDIRECT_URL", $_SERVER) ) {
             $inputURL = $_SERVER[ 'REDIRECT_URL' ];
         } else {
@@ -123,13 +124,14 @@
     /**
      * @return bool
      */
-    function isloggedIn() {
+    function isloggedIn()
+    {
         $appClass = new SkizImport\SkizImport();
 
-        if (!filter_input(INPUT_COOKIE, '_nx_skiz', FILTER_SANITIZE_STRING) ||
+        if ( !filter_input(INPUT_COOKIE, '_nx_skiz', FILTER_SANITIZE_STRING) ||
             !filter_input(INPUT_COOKIE, '_nx_skiz_usr', FILTER_SANITIZE_STRING) ||
             filter_input(INPUT_COOKIE, '_nx_skiz', FILTER_SANITIZE_STRING) !=
-            gen_cookie_hash( $appClass->getSetting("salt"), filter_input(INPUT_COOKIE, '_nx_skiz_usr', FILTER_SANITIZE_STRING) ) ) {
+            gen_cookie_hash($appClass->getSetting("salt"), filter_input(INPUT_COOKIE, '_nx_skiz_usr', FILTER_SANITIZE_STRING)) ) {
             return FALSE;
         } else {
             return TRUE;
@@ -149,6 +151,6 @@
          */
         function gen_cookie_hash( $salt, $fuid )
         {
-            return hash("sha256", $salt . $fuid . $_SERVER[ 'SERVER_NAME' ] . $_SERVER[ 'SERVER_ADDR' ] );
+            return hash("sha256", $salt . $fuid . $_SERVER[ 'SERVER_NAME' ] . $_SERVER[ 'SERVER_ADDR' ]);
         }
     }

@@ -91,10 +91,16 @@
                         <div>
                             <h2 class="text-center">We've Processed..</h2>
                             <ul>
-                                <li><?php echo $siteStats->getCreatedFitbitActivities(); ?> new Fitbit activities for <?php echo $siteStats->getUniqueUsers(); ?> users</li>
-                                <li>Produced a further <?php echo $siteStats->getUpdatedFitbitActivities(); ?> TCX files</li>
+                                <li><?php echo $siteStats->getCreatedFitbitActivities(); ?> new Fitbit activities
+                                    for <?php echo $siteStats->getUniqueUsers(); ?> users
+                                </li>
+                                <li>Produced a further <?php echo $siteStats->getUpdatedFitbitActivities(); ?> TCX
+                                    files
+                                </li>
                                 <li>Received <?php echo $siteStats->getTotalUploadedFiles(); ?> worth of SKIZ files</li>
-                                <li>Provided <?php echo $siteStats->getTotalDownloadedFiles(); ?> with of zip'd TCX file</li>
+                                <li>Provided <?php echo $siteStats->getTotalDownloadedFiles(); ?> with of zip'd TCX
+                                    file
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -104,7 +110,9 @@
                         <div>
                             <h2 class="text-center">&amp;</h2>
                             <ul>
-                                <li><?php echo $siteStats->getSkiTracksRuns(); ?> SkiTrack runs over <?php echo $siteStats->getSkiTracksSession(); ?> session</li>
+                                <li><?php echo $siteStats->getSkiTracksRuns(); ?> SkiTrack runs
+                                    over <?php echo $siteStats->getSkiTracksSession(); ?> session
+                                </li>
                                 <li><?php echo $siteStats->getTotalSkiTime(); ?> of slope time</li>
                                 <li>Covering <?php echo $siteStats->getTotalSkiDistance(); ?></li>
                             </ul>

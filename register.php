@@ -16,16 +16,15 @@
      * @license     https://license.nxfifteen.rocks/gpl-3/2018/ GNU GPLv3
      */
 
-    use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
     use SkizImport\Stats;
 
-    require_once (dirname(__FILE__) . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "autoloader.php");
+    require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "autoloader.php" );
 
     // Setup the App
     $appClass = new SkizImport\SkizImport();
 
     $stateGet = filter_input(INPUT_GET, 'state', FILTER_SANITIZE_STRING);
-    if (empty($stateGet) || $stateGet !== $_SESSION[ 'oauth2state' ] ) {
+    if ( empty($stateGet) || $stateGet !== $_SESSION[ 'oauth2state' ] ) {
         // Authorise a user against Fitbit's OAuth AIP
         nxr(0, "New GUEST user registration started");
 
@@ -69,15 +68,15 @@
         // Find out who the new OAuth keys belong too
         $resourceOwner = $helper->getResourceOwner($accessToken);
 
-        $_SESSION['accessToken'] = json_encode($accessToken);
-        $_SESSION['resourceOwner'] = json_encode($resourceOwner->toArray());
+        $_SESSION[ 'accessToken' ] = json_encode($accessToken);
+        $_SESSION[ 'resourceOwner' ] = json_encode($resourceOwner->toArray());
 
         setcookie(
             '_nx_skiz_usr',
             $resourceOwner->getId(),
             0,
             '/',
-            filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_STRING),true, false
+            filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_STRING), TRUE, FALSE
         );
 
         setcookie(
@@ -85,7 +84,7 @@
             gen_cookie_hash($appClass->getSetting("salt"), $resourceOwner->getId()),
             0,
             '/',
-            filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_STRING),true, false
+            filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_STRING), TRUE, FALSE
         );
 
         $stats = new Stats();

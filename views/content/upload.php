@@ -32,7 +32,8 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="skizfile">Skiz File</label>
-                                <input type="file" class="form-control-file" id="skizfile" name="skizfile" accept=".skiz">
+                                <input type="file" class="form-control-file" id="skizfile" name="skizfile"
+                                       accept=".skiz">
                             </div>
                         </div>
                     </div>
