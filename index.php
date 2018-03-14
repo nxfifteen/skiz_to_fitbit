@@ -16,18 +16,19 @@
      * @license     https://nxfifteen.me.uk/api/license/mit/2015-2017 MIT
      */
 
-    require_once (dirname(__FILE__) . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "autoloader.php");
-    if (!isloggedIn()) {
+    require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "autoloader.php" );
+    if ( !isloggedIn() ) {
         header("Location: ./login.php");
     }
 
-    $resourceOwner = json_decode($_SESSION['resourceOwner'], true);
+    if ( array_key_exists('resourceOwner', $_SESSION) ) {
+        $resourceOwner = json_decode($_SESSION[ 'resourceOwner' ], TRUE);
+    } else {
+        $resourceOwner = NULL;
+    }
 
     $url_namespace = getNameSpace();
-
-//    nxr(0, "Namespace Called: " . $url_namespace);
-
-    switch ($url_namespace) {
+    switch ( $url_namespace ) {
         case "upload/send":
             require_once( dirname(__FILE__) . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "forms" . DIRECTORY_SEPARATOR . "receive.php" );
             break;
@@ -37,8 +38,9 @@
     }
 
     $pageContent = dirname(__FILE__) . DIRECTORY_SEPARATOR . "views" . DIRECTORY_SEPARATOR . "content" . DIRECTORY_SEPARATOR . $url_namespace . ".php";
-    if (!file_exists($pageContent)) {
+    if ( !file_exists($pageContent) ) {
         header("Location: /views/pages/404.html");
+        die();
     }
 
 ?>
@@ -98,7 +100,7 @@
             <div id="animated fadeIn">
                 <?php
                     /** @noinspection PhpIncludeInspection */
-                    require_once($pageContent);
+                    require_once( $pageContent );
                 ?>
             </div>
         </div>
@@ -112,8 +114,11 @@
 </div>
 
 <footer class="app-footer">
-    <a href="https://nxfifteen.me.uk/gitlab/rocks/skiz">NxFITNESS Skiz Importer</a> &copy; <?php echo date('Y'); ?> Stuart
-    McCulloch Anderson. <span class="float-right d-sm-down-none" id="app-footer-project">An <a href="https://nxfifteen.me.uk">NxFIFTEEN</a> Rocks project, powered by <a href="http://coreui.io">CoreUI</a></span>
+    <a href="https://nxfifteen.me.uk/gitlab/rocks/skiz">NxFITNESS Skiz Importer</a> &copy; <?php echo date('Y'); ?>
+    Stuart
+    McCulloch Anderson. <span class="float-right d-sm-down-none" id="app-footer-project">An <a
+                href="https://nxfifteen.me.uk">NxFIFTEEN</a> Rocks project, powered by <a
+                href="http://coreui.io">CoreUI</a></span>
 </footer>
 
 <!-- Bootstrap and necessary plugins -->
